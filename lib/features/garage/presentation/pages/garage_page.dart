@@ -87,6 +87,9 @@ class _GaragePageState extends State<GaragePage>
   }
 
   Widget _buildContent(List<CarEntity> cars, double navBarHeight) {
+    final activeCars = cars.where((c) => !c.isFormer).toList();
+    final formerCars = cars.where((c) => c.isFormer).toList();
+
     if (cars.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -117,17 +120,25 @@ class _GaragePageState extends State<GaragePage>
         ),
       );
     }
-    return ListView.separated(
+
+    return ListView(
       padding: EdgeInsets.only(
         left: 20.w,
         right: 20.w,
         bottom: navBarHeight + 24.h,
       ),
-      itemCount: cars.length + 1,
-      separatorBuilder: (_, __) => SizedBox(height: 12.h),
-      itemBuilder: (context, index) {
-        if (index == cars.length) {
-          return SizedBox(
+      children: [
+        ...activeCars.map((car) => Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: GarageCarCard(
+                car: car,
+                onTap: () => context
+                    .push(AppRoutes.carDetails.replaceAll(':carId', car.id)),
+              ),
+            )),
+        Padding(
+          padding: EdgeInsets.only(bottom: 12.h),
+          child: SizedBox(
             width: double.infinity,
             height: 41.h,
             child: ElevatedButton(
@@ -144,15 +155,39 @@ class _GaragePageState extends State<GaragePage>
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
               ),
             ),
-          );
-        }
-        final car = cars[index];
-        return GarageCarCard(
-          car: car,
-          onTap: () =>
-              context.push(AppRoutes.carDetails.replaceAll(':carId', car.id)),
-        );
-      },
+          ),
+        ),
+        if (formerCars.isNotEmpty) ...[
+          Padding(
+            padding: EdgeInsets.only(top: 8.h, bottom: 16.h),
+            child: Row(
+              children: [
+                Expanded(child: Divider(color: AppColors.divider, thickness: 1)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+                  child: Text(
+                    'Бывшие',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondaryLight,
+                    ),
+                  ),
+                ),
+                Expanded(child: Divider(color: AppColors.divider, thickness: 1)),
+              ],
+            ),
+          ),
+          ...formerCars.map((car) => Padding(
+                padding: EdgeInsets.only(bottom: 12.h),
+                child: GarageCarCard(
+                  car: car,
+                  onTap: () => context
+                      .push(AppRoutes.carDetails.replaceAll(':carId', car.id)),
+                ),
+              )),
+        ],
+      ],
     );
   }
 }

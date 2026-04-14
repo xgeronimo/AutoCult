@@ -17,6 +17,7 @@ import '../../features/expenses/presentation/pages/expenses_page.dart';
 import '../../features/expenses/domain/entities/expense_entity.dart';
 import '../../features/service_records/presentation/pages/add_service_record_page.dart';
 import '../../features/service_records/presentation/pages/edit_service_record_page.dart';
+import '../../features/service_records/presentation/pages/report_selection_page.dart';
 import '../../features/service_records/presentation/pages/service_record_details_page.dart';
 import '../../features/service_records/domain/entities/service_record_entity.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
@@ -50,6 +51,7 @@ class AppRoutes {
   static const String addServiceRecord = '/garage/:carId/records/add';
   static const String serviceRecordDetails = '/garage/:carId/records/:recordId';
   static const String editServiceRecord = '/garage/:carId/records/:recordId/edit';
+  static const String serviceReport = '/garage/:carId/report';
 
   // Expenses
   static const String expenses = '/garage/:carId/expenses';
@@ -297,6 +299,18 @@ class AppRouter {
                 ],
               ),
             ],
+          ),
+          GoRoute(
+            path: 'report',
+            name: 'serviceReport',
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>;
+              return ReportSelectionPage(
+                car: extra['car'] as CarEntity,
+                records:
+                    extra['records'] as List<ServiceRecordEntity>,
+              );
+            },
           ),
           GoRoute(
             path: 'expenses',

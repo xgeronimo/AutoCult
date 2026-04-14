@@ -41,8 +41,9 @@ class _HomePageState extends State<HomePage>
 
     return BlocBuilder<GarageBloc, GarageState>(
       builder: (context, garageState) {
-        final cars =
-            garageState is GarageLoaded ? garageState.cars : <CarEntity>[];
+        final cars = garageState is GarageLoaded
+            ? garageState.cars.where((c) => !c.isFormer).toList()
+            : <CarEntity>[];
 
         return SafeArea(
           bottom: false,

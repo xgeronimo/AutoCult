@@ -90,22 +90,24 @@ class GarageCarCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.8.r),
         child: Container(
           color: AppColors.inputBackground,
-          child: Row(
+          child: Stack(
             children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: _buildTextContent(),
-                ),
-              ),
-              SizedBox(
-                width: 140.w,
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                width: 180.w,
                 child: Image.asset(
                   car.bodyType.imagePath,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.bottomLeft,
-                  height: double.infinity,
+                  fit: BoxFit.fitHeight,
+                  alignment: Alignment.centerLeft,
                 ),
+              ),
+              Positioned(
+                left: 16.w,
+                top: 16.h,
+                bottom: 16.h,
+                child: _buildTextContent(),
               ),
             ],
           ),

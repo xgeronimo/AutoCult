@@ -1332,61 +1332,31 @@ class _CarDetailsView extends StatelessWidget {
   }
 
   void _showGenerateReportDialog(BuildContext context, CarEntity car) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        title: Text(
-          'Сформировать отчёт?',
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w600,
+    final recordsState = context.read<ServiceRecordsBloc>().state;
+    final records = recordsState is ServiceRecordsLoaded
+        ? recordsState.records
+        : <ServiceRecordEntity>[];
+
+    if (records.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Нет записей для формирования отчёта'),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
           ),
         ),
-        content: Text(
-          'Будет сформирован PDF-отчёт с историей обслуживания и расходами для "${car.fullName}".',
-          style:
-              TextStyle(fontSize: 14.sp, color: AppColors.textSecondaryLight),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              'Отмена',
-              style: TextStyle(
-                color: AppColors.textSecondaryLight,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Формирование отчёта...'),
-                  backgroundColor: AppColors.primary,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-              );
-              // TODO: Implement actual PDF generation
-            },
-            child: Text(
-              'Сформировать',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
+      );
+      return;
+    }
+
+    context.push(
+      '/garage/${car.id}/report',
+      extra: {
+        'car': car,
+        'records': records,
+      },
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'core/network/network_info.dart';
 import 'core/services/image_picker_service.dart';
 import 'core/services/image_storage_service.dart';
+import 'core/services/pdf_report_service.dart';
 
 // Auth
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
@@ -103,6 +104,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<ImageStorageService>(
     () => ImageStorageService(storage: sl()),
+  );
+
+  sl.registerLazySingleton<PdfReportService>(
+    () => PdfReportService(),
   );
 
   // ==================== Auth ====================
