@@ -64,6 +64,13 @@ class AutoCultApp extends StatelessWidget {
                   theme: AppTheme.light,
                   darkTheme: AppTheme.dark,
                   themeMode: ThemeMode.system,
+                  builder: (context, child) {
+                    final mediaQuery = MediaQuery.of(context);
+                    return MediaQuery(
+                      data: mediaQuery.copyWith(viewInsets: EdgeInsets.zero),
+                      child: child ?? const SizedBox.shrink(),
+                    );
+                  },
                   locale: const Locale('ru', 'RU'),
                   supportedLocales: const [
                     Locale('ru', 'RU'),

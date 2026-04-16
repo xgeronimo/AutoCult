@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/license_plate_formatter.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../injection_container.dart';
@@ -159,9 +161,11 @@ class _EditCarPageState extends State<EditCarPage> {
         AuthTextField(
           controller: _licensePlateController,
           label: 'Гос. номер',
-          hint: 'A000AA000',
+          hint: 'А123АА12',
           errorText: _licensePlateError,
           textInputAction: TextInputAction.next,
+          textCapitalization: TextCapitalization.characters,
+          inputFormatters: [LicensePlateFormatter()],
           onChanged: (_) {
             _markChanged();
             if (_licensePlateError != null) {
@@ -742,9 +746,16 @@ class _EditCarPageState extends State<EditCarPage> {
       _yearError = 'Выберите год выпуска';
       isValid = false;
     }
-    if (_licensePlateController.text.trim().isEmpty) {
+    final plateText = _licensePlateController.text.trim();
+    if (plateText.isEmpty) {
       _licensePlateError = 'Введите гос. номер';
       isValid = false;
+    } else {
+      final plateError = Validators.licensePlate(plateText);
+      if (plateError != null) {
+        _licensePlateError = plateError;
+        isValid = false;
+      }
     }
 
     setState(() {});

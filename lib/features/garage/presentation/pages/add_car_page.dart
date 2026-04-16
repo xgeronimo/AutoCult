@@ -6,11 +6,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/license_plate_formatter.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../app/router/app_router.dart';
 import '../../../../injection_container.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/widgets/auth_text_field.dart';
+import '../../../documents/domain/entities/document_entity.dart';
+import '../../../documents/presentation/bloc/documents_bloc.dart';
 import '../../domain/entities/car_entity.dart';
 import '../bloc/garage_bloc.dart';
 import '../widgets/car_brand_selector.dart';
@@ -38,6 +43,7 @@ class _AddCarPageState extends State<AddCarPage> {
   String? _ptsPhoto;
   String? _stsPhoto;
   String? _insurancePhoto;
+  final List<String> _otherDocPhotos = [];
 
   final _vinController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -62,6 +68,10 @@ class _AddCarPageState extends State<AddCarPage> {
     return BlocListener<GarageBloc, GarageState>(
       listener: (context, state) {
         if (state is GarageLoaded && _isLoading) {
+          final newCarId = state.selectedCar?.id;
+          if (newCarId != null) {
+            _saveDocuments(newCarId);
+          }
           setState(() {
             _isLoading = false;
             _currentStep = 3;
@@ -165,9 +175,11 @@ class _AddCarPageState extends State<AddCarPage> {
         AuthTextField(
           controller: _licensePlateController,
           label: 'Гос. номер',
-          hint: 'A000AA000',
+          hint: 'А123АА12',
           errorText: _licensePlateError,
           textInputAction: TextInputAction.done,
+          textCapitalization: TextCapitalization.characters,
+          inputFormatters: [LicensePlateFormatter()],
           onChanged: (_) {
             if (_licensePlateError != null) {
               setState(() => _licensePlateError = null);
@@ -230,6 +242,8 @@ class _AddCarPageState extends State<AddCarPage> {
         SizedBox(height: 16.h),
         _buildDocumentPhotoField('Страховка', _insurancePhoto,
             onAdd: () => _addDocumentPhoto('insurance')),
+        SizedBox(height: 16.h),
+        _buildOtherDocumentsSection(),
         SizedBox(height: 24.h),
       ],
     );
@@ -765,9 +779,16 @@ class _AddCarPageState extends State<AddCarPage> {
       isValid = false;
     }
 
-    if (_licensePlateController.text.trim().isEmpty) {
+    final plateText = _licensePlateController.text.trim();
+    if (plateText.isEmpty) {
       _licensePlateError = 'Введите гос. номер';
       isValid = false;
+    } else {
+      final plateError = Validators.licensePlate(plateText);
+      if (plateError != null) {
+        _licensePlateError = plateError;
+        isValid = false;
+      }
     }
 
     setState(() {});
@@ -793,6 +814,47 @@ class _AddCarPageState extends State<AddCarPage> {
               ? _descriptionController.text.trim()
               : null,
         ));
+  }
+
+  void _saveDocuments(String carId) {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is! AuthAuthenticated) return;
+
+    final userId = authState.user.id;
+    final docsBloc = sl<DocumentsBloc>();
+
+    if (_ptsPhoto != null) {
+      docsBloc.add(DocumentsAddRequested(
+        carId: carId,
+        userId: userId,
+        type: DocumentType.pts,
+        photoPath: _ptsPhoto!,
+      ));
+    }
+    if (_stsPhoto != null) {
+      docsBloc.add(DocumentsAddRequested(
+        carId: carId,
+        userId: userId,
+        type: DocumentType.sts,
+        photoPath: _stsPhoto!,
+      ));
+    }
+    if (_insurancePhoto != null) {
+      docsBloc.add(DocumentsAddRequested(
+        carId: carId,
+        userId: userId,
+        type: DocumentType.insurance,
+        photoPath: _insurancePhoto!,
+      ));
+    }
+    for (final photoPath in _otherDocPhotos) {
+      docsBloc.add(DocumentsAddRequested(
+        carId: carId,
+        userId: userId,
+        type: DocumentType.other,
+        photoPath: photoPath,
+      ));
+    }
   }
 
   Future<void> _selectBrand() async {
@@ -864,6 +926,48 @@ class _AddCarPageState extends State<AddCarPage> {
     setState(() {
       _carPhotos.removeAt(index);
     });
+  }
+
+  Widget _buildOtherDocumentsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Другие документы',
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimaryLight,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Wrap(
+          spacing: 12.w,
+          runSpacing: 12.h,
+          children: [
+            ..._otherDocPhotos.asMap().entries.map(
+                  (entry) => _buildPhotoThumbnail(
+                    entry.value,
+                    onRemove: () => _removeOtherDocPhoto(entry.key),
+                  ),
+                ),
+            _buildAddPhotoButton(onTap: _addOtherDocPhoto),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _addOtherDocPhoto() async {
+    final pickerService = sl<ImagePickerService>();
+    final path = await pickerService.showPickerSheet(context);
+    if (path != null) {
+      setState(() => _otherDocPhotos.add(path));
+    }
+  }
+
+  void _removeOtherDocPhoto(int index) {
+    setState(() => _otherDocPhotos.removeAt(index));
   }
 
   Future<void> _addDocumentPhoto(String type) async {

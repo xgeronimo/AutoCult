@@ -3,14 +3,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
-class CarModelSelector extends StatelessWidget {
+class CarModelSelector extends StatefulWidget {
   final String brand;
 
   const CarModelSelector({super.key, required this.brand});
 
   @override
+  State<CarModelSelector> createState() => _CarModelSelectorState();
+}
+
+class _CarModelSelectorState extends State<CarModelSelector> {
+  bool _isCustomInput = false;
+  final _customModelController = TextEditingController();
+  String? _customModelError;
+
+  @override
+  void dispose() {
+    _customModelController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final models = _getModelsForBrand(brand);
+    final models = _getModelsForBrand(widget.brand);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
@@ -40,33 +55,198 @@ class CarModelSelector extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16.h),
-              Expanded(
-                child: ListView.builder(
-                  controller: scrollController,
-                  itemCount: models.length,
-                  itemBuilder: (context, index) {
-                    final model = models[index];
-                    return ListTile(
-                      title: Text(
-                        model,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: AppColors.textPrimaryLight,
+              if (_isCustomInput)
+                _buildCustomInput()
+              else
+                Expanded(
+                  child: ListView.builder(
+                    controller: scrollController,
+                    itemCount: models.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == models.length) {
+                        return ListTile(
+                          title: Text(
+                            'Другая',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          leading: Icon(
+                            Icons.edit_outlined,
+                            color: AppColors.primary,
+                            size: 20.sp,
+                          ),
+                          onTap: () {
+                            setState(() => _isCustomInput = true);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        );
+                      }
+                      final model = models[index];
+                      return ListTile(
+                        title: Text(
+                          model,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: AppColors.textPrimaryLight,
+                          ),
                         ),
-                      ),
-                      onTap: () => Navigator.pop(context, model),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                    );
-                  },
+                        onTap: () => Navigator.pop(context, model),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
             ],
           ),
         );
       },
     );
+  }
+
+  Widget _buildCustomInput() {
+    return Expanded(
+      child: Column(
+        children: [
+          SizedBox(height: 8.h),
+          TextField(
+            controller: _customModelController,
+            autofocus: true,
+            textCapitalization: TextCapitalization.words,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textPrimaryLight,
+            ),
+            decoration: InputDecoration(
+              hintText: 'Введите название модели',
+              hintStyle: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textHint,
+              ),
+              filled: true,
+              fillColor: AppColors.inputBackground,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12.w,
+                vertical: 16.h,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: const BorderSide(
+                  color: AppColors.primary,
+                  width: 1.5,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: const BorderSide(
+                  color: AppColors.error,
+                  width: 1.5,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: const BorderSide(
+                  color: AppColors.error,
+                  width: 1.5,
+                ),
+              ),
+            ),
+            onSubmitted: (_) => _submitCustomModel(),
+          ),
+          if (_customModelError != null) ...[
+            SizedBox(height: 6.h),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _customModelError!,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.error,
+                ),
+              ),
+            ),
+          ],
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 41.h,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isCustomInput = false;
+                        _customModelError = null;
+                        _customModelController.clear();
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.inputBackground,
+                      foregroundColor: AppColors.textPrimaryLight,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: Text(
+                      'Назад',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: SizedBox(
+                  height: 41.h,
+                  child: ElevatedButton(
+                    onPressed: _submitCustomModel,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: Text(
+                      'Подтвердить',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _submitCustomModel() {
+    final text = _customModelController.text.trim();
+    if (text.isEmpty) {
+      setState(() => _customModelError = 'Введите название модели');
+      return;
+    }
+    Navigator.pop(context, text);
   }
 
   List<String> _getModelsForBrand(String brand) {
@@ -175,6 +355,6 @@ class CarModelSelector extends StatelessWidget {
       ],
     };
 
-    return models[brand] ?? ['Другая модель'];
+    return models[brand] ?? [];
   }
 }

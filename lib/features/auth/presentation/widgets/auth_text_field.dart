@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -18,6 +19,8 @@ class AuthTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final bool isRequired;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextCapitalization textCapitalization;
 
   const AuthTextField({
     super.key,
@@ -35,6 +38,8 @@ class AuthTextField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.isRequired = true,
+    this.inputFormatters,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   @override
@@ -76,6 +81,8 @@ class AuthTextField extends StatelessWidget {
             readOnly: readOnly,
             keyboardType: keyboardType,
             textInputAction: textInputAction,
+            textCapitalization: textCapitalization,
+            inputFormatters: inputFormatters,
             onChanged: onChanged,
             onSubmitted: onSubmitted,
             style: TextStyle(
