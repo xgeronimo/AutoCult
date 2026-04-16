@@ -4,7 +4,6 @@ import '../../../../core/errors/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../repositories/auth_repository.dart';
 
-/// Use Case для сброса пароля
 class ResetPasswordUseCase implements UseCase<void, ResetPasswordParams> {
   final AuthRepository repository;
 
@@ -16,7 +15,6 @@ class ResetPasswordUseCase implements UseCase<void, ResetPasswordParams> {
   }
 }
 
-/// Параметры для ResetPasswordUseCase
 class ResetPasswordParams extends Equatable {
   final String email;
 

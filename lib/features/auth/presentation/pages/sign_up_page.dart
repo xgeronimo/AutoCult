@@ -10,7 +10,6 @@ import '../bloc/auth_bloc.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/welcome_dialog.dart';
 
-/// Страница регистрации
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -25,7 +24,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
-  
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   String? _emailError;
@@ -44,21 +43,21 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _onSignUp() {
-    // Сбрасываем ошибки
     setState(() {
       _emailError = null;
       _passwordError = null;
       _confirmPasswordError = null;
     });
 
-    // Валидация
     final emailError = Validators.email(_emailController.text);
     final passwordError = Validators.password(_passwordController.text);
     final confirmPasswordError = Validators.confirmPassword(
       _passwordController.text,
     )(_confirmPasswordController.text);
 
-    if (emailError != null || passwordError != null || confirmPasswordError != null) {
+    if (emailError != null ||
+        passwordError != null ||
+        confirmPasswordError != null) {
       setState(() {
         _emailError = emailError;
         _passwordError = passwordError;
@@ -67,7 +66,6 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
-    // Отправляем событие регистрации
     context.read<AuthBloc>().add(AuthSignUpRequested(
           email: _emailController.text.trim(),
           password: _passwordController.text,
@@ -116,166 +114,152 @@ class _SignUpPageState extends State<SignUpPage> {
 
           return SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w), // По дизайну: 20px
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 24.h), // top: 68 - 44 (status bar)
-                    
-                    // Заголовок (по дизайну: SF Pro, 510, 32px)
-                    Text(
-                      'Регистрация',
-                      style: TextStyle(
-                        fontSize: 32.sp,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.textPrimaryLight,
-                      ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 24.h),
+                  Text(
+                    'Регистрация',
+                    style: TextStyle(
+                      fontSize: 32.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimaryLight,
                     ),
-                    SizedBox(height: 8.h),
-                    
-                    // Подзаголовок (по дизайну: SF Pro, 510, 14px, #888888)
-                    Text(
-                      'Введите вашу электронную почту и пароль для регистрации',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'Введите вашу электронную почту и пароль для регистрации',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondaryLight,
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  AuthTextField(
+                    controller: _emailController,
+                    focusNode: _emailFocusNode,
+                    label: 'Электронная почта',
+                    hint: 'example@email.com',
+                    errorText: _emailError,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (_) {
+                      if (_emailError != null) {
+                        setState(() => _emailError = null);
+                      }
+                    },
+                    onSubmitted: (_) {
+                      _passwordFocusNode.requestFocus();
+                    },
+                  ),
+                  SizedBox(height: 16.h),
+                  AuthTextField(
+                    controller: _passwordController,
+                    focusNode: _passwordFocusNode,
+                    label: 'Пароль',
+                    errorText: _passwordError,
+                    obscureText: _obscurePassword,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (_) {
+                      if (_passwordError != null) {
+                        setState(() => _passwordError = null);
+                      }
+                    },
+                    onSubmitted: (_) {
+                      _confirmPasswordFocusNode.requestFocus();
+                    },
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
                         color: AppColors.textSecondaryLight,
                       ),
-                    ),
-                    SizedBox(height: 24.h), // gap до полей
-                    
-                    // Поле Email
-                    AuthTextField(
-                      controller: _emailController,
-                      focusNode: _emailFocusNode,
-                      label: 'Электронная почта',
-                      hint: 'example@email.com',
-                      errorText: _emailError,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      onChanged: (_) {
-                        if (_emailError != null) {
-                          setState(() => _emailError = null);
-                        }
-                      },
-                      onSubmitted: (_) {
-                        _passwordFocusNode.requestFocus();
+                      onPressed: () {
+                        setState(() => _obscurePassword = !_obscurePassword);
                       },
                     ),
-                    SizedBox(height: 16.h), // По дизайну: gap 16px
-                    
-                    // Поле Пароль
-                    AuthTextField(
-                      controller: _passwordController,
-                      focusNode: _passwordFocusNode,
-                      label: 'Пароль',
-                      errorText: _passwordError,
-                      obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.next,
-                      onChanged: (_) {
-                        if (_passwordError != null) {
-                          setState(() => _passwordError = null);
-                        }
-                      },
-                      onSubmitted: (_) {
-                        _confirmPasswordFocusNode.requestFocus();
-                      },
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword 
-                              ? Icons.visibility_outlined 
-                              : Icons.visibility_off_outlined,
-                          color: AppColors.textSecondaryLight,
-                        ),
-                        onPressed: () {
-                          setState(() => _obscurePassword = !_obscurePassword);
-                        },
+                  ),
+                  SizedBox(height: 16.h),
+                  AuthTextField(
+                    controller: _confirmPasswordController,
+                    focusNode: _confirmPasswordFocusNode,
+                    label: 'Повторите пароль',
+                    errorText: _confirmPasswordError,
+                    obscureText: _obscureConfirmPassword,
+                    textInputAction: TextInputAction.done,
+                    onChanged: (_) {
+                      if (_confirmPasswordError != null) {
+                        setState(() => _confirmPasswordError = null);
+                      }
+                    },
+                    onSubmitted: (_) => _onSignUp(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureConfirmPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: AppColors.textSecondaryLight,
                       ),
-                    ),
-                    SizedBox(height: 16.h), // По дизайну: gap 16px
-                    
-                    // Поле Повторите пароль
-                    AuthTextField(
-                      controller: _confirmPasswordController,
-                      focusNode: _confirmPasswordFocusNode,
-                      label: 'Повторите пароль',
-                      errorText: _confirmPasswordError,
-                      obscureText: _obscureConfirmPassword,
-                      textInputAction: TextInputAction.done,
-                      onChanged: (_) {
-                        if (_confirmPasswordError != null) {
-                          setState(() => _confirmPasswordError = null);
-                        }
+                      onPressed: () {
+                        setState(() =>
+                            _obscureConfirmPassword = !_obscureConfirmPassword);
                       },
-                      onSubmitted: (_) => _onSignUp(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureConfirmPassword 
-                              ? Icons.visibility_outlined 
-                              : Icons.visibility_off_outlined,
-                          color: AppColors.textSecondaryLight,
-                        ),
-                        onPressed: () {
-                          setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
-                        },
-                      ),
                     ),
-                    
-                    const Spacer(),
-                    
-                    // Кнопка Продолжить (по дизайну: высота 41px, radius 12px)
-                    SizedBox(
-                      width: double.infinity,
-                      height: 41.h,
-                      child: ElevatedButton(
-                        onPressed: isLoading ? null : _onSignUp,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          textStyle: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 41.h,
+                    child: ElevatedButton(
+                      onPressed: isLoading ? null : _onSignUp,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
-                        child: isLoading
-                            ? SizedBox(
-                                height: 20.h,
-                                width: 20.h,
-                                child: const CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Text('Продолжить'),
-                      ),
-                    ),
-                    SizedBox(height: 8.h), // По дизайну: gap 8px
-                    
-                    // Кнопка Уже есть аккаунт? (по дизайну: высота 41px, серый #969696)
-                    SizedBox(
-                      width: double.infinity,
-                      height: 41.h,
-                      child: ElevatedButton(
-                        onPressed: () => context.pop(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.secondary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          textStyle: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        textStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
                         ),
-                        child: const Text('Уже есть аккаунт?'),
                       ),
+                      child: isLoading
+                          ? SizedBox(
+                              height: 20.h,
+                              width: 20.h,
+                              child: const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text('Продолжить'),
                     ),
-                    SizedBox(height: 53.h), // Отступ до home indicator
-                  ],
+                  ),
+                  SizedBox(height: 8.h),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 41.h,
+                    child: ElevatedButton(
+                      onPressed: () => context.pop(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.secondary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        textStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      child: const Text('Уже есть аккаунт?'),
+                    ),
+                  ),
+                  SizedBox(height: 53.h),
+                ],
               ),
             ),
           );

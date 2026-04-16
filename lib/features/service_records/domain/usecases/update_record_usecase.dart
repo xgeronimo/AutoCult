@@ -8,7 +8,8 @@ class UpdateRecordUseCase {
 
   UpdateRecordUseCase(this.repository);
 
-  Future<Either<Failure, ServiceRecordEntity>> call(ServiceRecordEntity record) {
+  Future<Either<Failure, ServiceRecordEntity>> call(
+      ServiceRecordEntity record) {
     return repository.updateRecord(record);
   }
 }

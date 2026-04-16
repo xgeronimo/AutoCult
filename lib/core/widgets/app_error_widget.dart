@@ -4,7 +4,6 @@ import '../theme/app_colors.dart';
 import '../constants/app_strings.dart';
 import 'app_button.dart';
 
-/// Виджет отображения ошибки
 class AppErrorWidget extends StatelessWidget {
   final String? title;
   final String message;
@@ -19,7 +18,6 @@ class AppErrorWidget extends StatelessWidget {
     this.icon = Icons.error_outline,
   });
 
-  /// Фабричный конструктор для ошибки сети
   factory AppErrorWidget.network({VoidCallback? onRetry}) {
     return AppErrorWidget(
       title: 'Нет подключения',
@@ -29,7 +27,6 @@ class AppErrorWidget extends StatelessWidget {
     );
   }
 
-  /// Фабричный конструктор для ошибки сервера
   factory AppErrorWidget.server({VoidCallback? onRetry}) {
     return AppErrorWidget(
       title: 'Ошибка сервера',

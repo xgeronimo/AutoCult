@@ -12,7 +12,6 @@ import '../../domain/usecases/delete_car_usecase.dart';
 part 'garage_event.dart';
 part 'garage_state.dart';
 
-/// BLoC для управления гаражом
 class GarageBloc extends Bloc<GarageEvent, GarageState> {
   final GetCarsUseCase getCarsUseCase;
   final AddCarUseCase addCarUseCase;
@@ -39,7 +38,6 @@ class GarageBloc extends Bloc<GarageEvent, GarageState> {
     on<GarageDeleteCarPhoto>(_onDeleteCarPhoto);
   }
 
-  /// Установить текущего пользователя
   void setUserId(String userId) {
     _currentUserId = userId;
   }
@@ -80,7 +78,6 @@ class GarageBloc extends Bloc<GarageEvent, GarageState> {
     emit(const GarageLoading());
 
     try {
-      // Загружаем фото в Firebase Storage, если есть
       String? photoUrl;
       if (event.photoPath != null) {
         photoUrl = await imageStorageService.uploadImage(
@@ -218,9 +215,8 @@ class GarageBloc extends Bloc<GarageEvent, GarageState> {
           emit(currentState);
         },
         (_) {
-          final updatedCars = currentState.cars
-              .where((car) => car.id != event.carId)
-              .toList();
+          final updatedCars =
+              currentState.cars.where((car) => car.id != event.carId).toList();
 
           emit(GarageLoaded(
             cars: updatedCars,
@@ -241,9 +237,9 @@ class GarageBloc extends Bloc<GarageEvent, GarageState> {
     final currentState = state;
     if (currentState is! GarageLoaded) return;
 
-    final selectedCar = currentState.cars
-        .where((car) => car.id == event.carId)
-        .firstOrNull ?? currentState.cars.firstOrNull;
+    final selectedCar =
+        currentState.cars.where((car) => car.id == event.carId).firstOrNull ??
+            currentState.cars.firstOrNull;
 
     emit(currentState.copyWith(selectedCar: () => selectedCar));
   }
@@ -296,12 +292,10 @@ class GarageBloc extends Bloc<GarageEvent, GarageState> {
     try {
       final car = currentState.cars.firstWhere((c) => c.id == event.carId);
 
-      // Удаляем старое фото, если было
       if (car.photoUrl != null && car.photoUrl!.isNotEmpty) {
         await imageStorageService.deleteImage(car.photoUrl!);
       }
 
-      // Загружаем новое
       final photoUrl = await imageStorageService.uploadImage(
         storagePath: StoragePaths.carPhotos,
         filePath: event.photoPath,

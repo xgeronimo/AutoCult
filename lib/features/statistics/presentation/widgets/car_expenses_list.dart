@@ -45,8 +45,7 @@ class CarExpensesList extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           ...sorted.map((entry) {
-            final car =
-                cars.where((c) => c.id == entry.key).firstOrNull;
+            final car = cars.where((c) => c.id == entry.key).firstOrNull;
             final carName = car?.fullName ?? 'Неизвестный';
             final percent =
                 totalAmount > 0 ? (entry.value / totalAmount * 100) : 0.0;

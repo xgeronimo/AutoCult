@@ -1,10 +1,8 @@
 import '../constants/app_constants.dart';
 
-/// Валидаторы для форм
 class Validators {
   Validators._();
 
-  /// Проверка email
   static String? email(String? value) {
     if (value == null || value.isEmpty) {
       return 'Введите email';
@@ -16,7 +14,6 @@ class Validators {
     return null;
   }
 
-  /// Проверка пароля
   static String? password(String? value) {
     if (value == null || value.isEmpty) {
       return 'Введите пароль';
@@ -27,7 +24,6 @@ class Validators {
     return null;
   }
 
-  /// Проверка подтверждения пароля
   static String? Function(String?) confirmPassword(String password) {
     return (String? value) {
       if (value == null || value.isEmpty) {
@@ -40,7 +36,6 @@ class Validators {
     };
   }
 
-  /// Проверка обязательного поля
   static String? required(String? value, [String fieldName = 'поле']) {
     if (value == null || value.trim().isEmpty) {
       return 'Заполните $fieldName';
@@ -48,25 +43,22 @@ class Validators {
     return null;
   }
 
-  /// Проверка VIN кода
   static String? vin(String? value) {
     if (value == null || value.isEmpty) {
-      return null; // VIN не обязателен
+      return null;
     }
     if (value.length != AppConstants.vinLength) {
       return 'VIN должен содержать ${AppConstants.vinLength} символов';
     }
-    // VIN не содержит букв I, O, Q
     if (value.contains(RegExp(r'[IOQioq]'))) {
       return 'VIN не может содержать буквы I, O, Q';
     }
     return null;
   }
 
-  /// Проверка государственного номера (ГРЗ)
   static String? licensePlate(String? value) {
     if (value == null || value.isEmpty) {
-      return null; // Номер не обязателен
+      return null;
     }
     if (!AppConstants.licensePlateRegex.hasMatch(value.toUpperCase())) {
       return 'Некорректный формат гос. номера';
@@ -74,7 +66,6 @@ class Validators {
     return null;
   }
 
-  /// Проверка года выпуска
   static String? year(String? value) {
     if (value == null || value.isEmpty) {
       return 'Введите год выпуска';
@@ -90,7 +81,6 @@ class Validators {
     return null;
   }
 
-  /// Проверка пробега
   static String? mileage(String? value) {
     if (value == null || value.isEmpty) {
       return 'Введите пробег';
@@ -105,10 +95,9 @@ class Validators {
     return null;
   }
 
-  /// Проверка стоимости
   static String? cost(String? value) {
     if (value == null || value.isEmpty) {
-      return null; // Стоимость не обязательна
+      return null;
     }
     final cost = double.tryParse(value.replaceAll(RegExp(r'[\s,]'), ''));
     if (cost == null || cost < 0) {
@@ -117,7 +106,6 @@ class Validators {
     return null;
   }
 
-  /// Проверка номера телефона
   static String? phone(String? value) {
     if (value == null || value.isEmpty) {
       return null;

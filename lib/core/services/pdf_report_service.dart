@@ -167,10 +167,8 @@ class PdfReportService {
     PdfColor primaryColor,
     PdfColor headerBg,
   ) {
-    final earliest =
-        records.isNotEmpty ? records.last.date : DateTime.now();
-    final latest =
-        records.isNotEmpty ? records.first.date : DateTime.now();
+    final earliest = records.isNotEmpty ? records.last.date : DateTime.now();
+    final latest = records.isNotEmpty ? records.first.date : DateTime.now();
     final maxMileage = records.isNotEmpty
         ? records.map((r) => r.mileage).reduce((a, b) => a > b ? a : b)
         : car.mileage;
@@ -362,8 +360,7 @@ class PdfReportService {
                   pw.SizedBox(height: 6),
                   pw.Row(
                     children: [
-                      _detailChip(
-                          '${record.category.icon} ${record.category.label}'),
+                      _detailChip(record.category.label),
                       pw.SizedBox(width: 8),
                       _detailChip('${record.mileage} км'),
                       if (record.cost != null) ...[

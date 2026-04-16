@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/app_router.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../auth/domain/entities/user_entity.dart';
@@ -24,16 +25,8 @@ class ProfilePage extends StatelessWidget {
         if (state is ProfileAccountDeleted) {
           context.go(AppRoutes.signIn);
         } else if (state is ProfileError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: state.message, type: SnackBarType.error);
         }
       },
       child: Scaffold(
@@ -41,12 +34,14 @@ class ProfilePage extends StatelessWidget {
         body: SafeArea(
           child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, authState) {
-              final user = authState is AuthAuthenticated ? authState.user : null;
+              final user =
+                  authState is AuthAuthenticated ? authState.user : null;
 
               return Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                     child: Row(
                       children: [
                         GlassPillButton(
@@ -111,12 +106,14 @@ class ProfilePage extends StatelessWidget {
                             iconPath: 'assets/icons/star-s-fill.svg',
                             label: 'Оценить приложение',
                             onTap: () {
-                              _showInfoSnackBar(context, 'Спасибо за интерес! Скоро приложение появится в магазине');
+                              _showInfoSnackBar(context,
+                                  'Спасибо за интерес! Скоро приложение появится в магазине');
                             },
                           ),
                           SizedBox(height: 8.h),
                           _buildMenuItem(
-                            iconPath: 'assets/icons/customer-service-2-fill.svg',
+                            iconPath:
+                                'assets/icons/customer-service-2-fill.svg',
                             label: 'Обратная связь',
                             onTap: () {
                               _showFeedbackSheet(context);
@@ -191,7 +188,8 @@ class ProfilePage extends StatelessWidget {
                     'С нами с ${_formatShortDate(user!.createdAt)}',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: AppColors.textSecondaryLight.withValues(alpha: 0.7),
+                      color:
+                          AppColors.textSecondaryLight.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -405,8 +403,9 @@ class ProfilePage extends StatelessWidget {
           onConfirm: () {
             Navigator.pop(ctx);
             context.read<ProfileBloc>().add(
-              ProfileDeleteAccountRequested(password: passwordController.text),
-            );
+                  ProfileDeleteAccountRequested(
+                      password: passwordController.text),
+                );
           },
         ),
       ),
@@ -488,22 +487,23 @@ class ProfilePage extends StatelessWidget {
   }
 
   void _showInfoSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.primary,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-      ),
-    );
+    AppSnackBar.show(context, message: message);
   }
 
   String _formatShortDate(DateTime date) {
     final months = [
-      'янв.', 'фев.', 'мар.', 'апр.', 'мая', 'июн.',
-      'июл.', 'авг.', 'сен.', 'окт.', 'ноя.', 'дек.',
+      'янв.',
+      'фев.',
+      'мар.',
+      'апр.',
+      'мая',
+      'июн.',
+      'июл.',
+      'авг.',
+      'сен.',
+      'окт.',
+      'ноя.',
+      'дек.',
     ];
     return '${months[date.month - 1]} ${date.year}';
   }

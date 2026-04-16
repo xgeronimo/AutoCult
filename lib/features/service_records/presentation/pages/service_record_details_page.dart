@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/photo_viewer_page.dart';
 import '../../../../injection_container.dart';
@@ -49,16 +50,8 @@ class _ServiceRecordDetailsView extends StatelessWidget {
           listener: (context, state) {
             if (state is ServiceRecordsLoaded &&
                 !state.records.any((r) => r.id == recordId)) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Запись удалена'),
-                  backgroundColor: AppColors.primary,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-              );
+              AppSnackBar.show(context,
+                  message: 'Запись удалена', type: SnackBarType.success);
               context.pop();
             }
           },
@@ -89,9 +82,8 @@ class _ServiceRecordDetailsView extends StatelessWidget {
             }
 
             if (state is ServiceRecordsLoaded) {
-              final record = state.records
-                  .where((r) => r.id == recordId)
-                  .firstOrNull;
+              final record =
+                  state.records.where((r) => r.id == recordId).firstOrNull;
               if (record == null) {
                 return Column(
                   children: [
@@ -134,8 +126,6 @@ class _ServiceRecordDetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 16.h),
-
-                // Category badge and title
                 Row(
                   children: [
                     Container(
@@ -146,9 +136,10 @@ class _ServiceRecordDetailsView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Center(
-                        child: Text(
+                        child: Icon(
                           record.category.icon,
-                          style: TextStyle(fontSize: 24.sp),
+                          size: 24.sp,
+                          color: AppColors.textSecondaryLight,
                         ),
                       ),
                     ),
@@ -189,24 +180,19 @@ class _ServiceRecordDetailsView extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 24.h),
-
-                // Info cards
                 _buildInfoRow(
                   icon: Icons.calendar_today_rounded,
                   label: 'Дата',
                   value: dateFormat.format(record.date),
                 ),
                 SizedBox(height: 12.h),
-
                 _buildInfoRow(
                   icon: Icons.speed_rounded,
                   label: 'Пробег',
                   value: '${numberFormat.format(record.mileage)} км',
                 ),
                 SizedBox(height: 12.h),
-
                 if (record.cost != null) ...[
                   _buildInfoRow(
                     icon: Icons.payments_outlined,
@@ -216,7 +202,6 @@ class _ServiceRecordDetailsView extends StatelessWidget {
                   ),
                   SizedBox(height: 12.h),
                 ],
-
                 if (record.serviceStation != null &&
                     record.serviceStation!.isNotEmpty) ...[
                   _buildInfoRow(
@@ -226,7 +211,6 @@ class _ServiceRecordDetailsView extends StatelessWidget {
                   ),
                   SizedBox(height: 12.h),
                 ],
-
                 if (record.description != null &&
                     record.description!.isNotEmpty) ...[
                   SizedBox(height: 12.h),
@@ -256,7 +240,6 @@ class _ServiceRecordDetailsView extends StatelessWidget {
                     ),
                   ),
                 ],
-
                 if (record.hasPhotos) ...[
                   SizedBox(height: 24.h),
                   Text(
@@ -305,16 +288,12 @@ class _ServiceRecordDetailsView extends StatelessWidget {
                     ),
                   ),
                 ],
-
                 SizedBox(height: 32.h),
-
-                // Delete button
                 SizedBox(
                   width: double.infinity,
                   height: 41.h,
                   child: OutlinedButton.icon(
-                    onPressed: () =>
-                        _showDeleteDialog(context, record),
+                    onPressed: () => _showDeleteDialog(context, record),
                     icon: const Icon(Icons.delete_outline_rounded),
                     label: Text(
                       'Удалить запись',
@@ -332,7 +311,6 @@ class _ServiceRecordDetailsView extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 SizedBox(height: 40.h),
               ],
             ),

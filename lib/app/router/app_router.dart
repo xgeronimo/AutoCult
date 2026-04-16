@@ -24,40 +24,36 @@ import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/profile/presentation/pages/change_password_page.dart';
 import '../../features/profile/presentation/pages/settings_page.dart';
-import '../../features/profile/presentation/pages/notifications_page.dart' as profile_notifications;
+import '../../features/profile/presentation/pages/notifications_page.dart'
+    as profile_notifications;
 import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/notifications/presentation/pages/create_reminder_page.dart';
 import '../../features/personal_documents/presentation/pages/personal_documents_page.dart';
 import '../../features/auth/domain/entities/user_entity.dart' as auth_entity;
 
-/// Пути роутинга
 class AppRoutes {
   AppRoutes._();
 
-  // Auth
   static const String signIn = '/sign-in';
   static const String signUp = '/sign-up';
   static const String forgotPassword = '/forgot-password';
 
-  // Main
   static const String home = '/';
   static const String garage = '/garage';
   static const String addCar = '/garage/add';
   static const String carDetails = '/garage/:carId';
   static const String editCar = '/garage/:carId/edit';
 
-  // Service Records
   static const String serviceRecords = '/garage/:carId/records';
   static const String addServiceRecord = '/garage/:carId/records/add';
   static const String serviceRecordDetails = '/garage/:carId/records/:recordId';
-  static const String editServiceRecord = '/garage/:carId/records/:recordId/edit';
+  static const String editServiceRecord =
+      '/garage/:carId/records/:recordId/edit';
   static const String serviceReport = '/garage/:carId/report';
 
-  // Expenses
   static const String expenses = '/garage/:carId/expenses';
   static const String addExpense = '/garage/:carId/expenses/add';
 
-  // Profile
   static const String profile = '/profile';
   static const String editProfile = '/profile/edit';
   static const String personalDocuments = '/profile/documents';
@@ -67,11 +63,9 @@ class AppRoutes {
   static const String settings = '/profile/settings';
   static const String changePassword = '/profile/settings/change-password';
 
-  // Statistics
   static const String statistics = '/statistics';
 }
 
-/// Конфигурация роутера
 class AppRouter {
   AppRouter._();
 
@@ -109,7 +103,6 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.signIn,
     debugLogDiagnostics: false,
-
     redirect: (context, state) {
       final authBloc = context.read<AuthBloc>();
       final authState = authBloc.state;
@@ -134,9 +127,7 @@ class AppRouter {
 
       return null;
     },
-
     routes: [
-      // ==================== Auth Routes ====================
       GoRoute(
         path: AppRoutes.signIn,
         name: 'signIn',
@@ -152,29 +143,21 @@ class AppRouter {
         name: 'forgotPassword',
         builder: (context, state) => const ForgotPasswordPage(),
       ),
-
-      // ==================== Main Tabs ====================
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
         builder: (context, state) => const MainTabsPage(),
       ),
-
-      // ==================== Garage Routes ====================
       GoRoute(
         path: AppRoutes.garage,
         name: 'garage',
         builder: (context, state) => const MainTabsPage(),
       ),
-
-      // Add Car — отдельный top-level маршрут, без конфликта с :carId
       GoRoute(
         path: AppRoutes.addCar,
         name: 'addCar',
         builder: (context, state) => const AddCarPage(),
       ),
-
-      // Car Details Route
       GoRoute(
         path: '/garage/:carId',
         name: 'carDetails',
@@ -188,7 +171,8 @@ class AppRouter {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline,
+                        size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     const Text('Автомобиль не найден'),
                     const SizedBox(height: 16),
@@ -217,7 +201,8 @@ class AppRouter {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                        const Icon(Icons.error_outline,
+                            size: 64, color: Colors.red),
                         const SizedBox(height: 16),
                         const Text('Автомобиль не найден'),
                         const SizedBox(height: 16),
@@ -307,8 +292,7 @@ class AppRouter {
               final extra = state.extra as Map<String, dynamic>;
               return ReportSelectionPage(
                 car: extra['car'] as CarEntity,
-                records:
-                    extra['records'] as List<ServiceRecordEntity>,
+                records: extra['records'] as List<ServiceRecordEntity>,
               );
             },
           ),
@@ -344,8 +328,6 @@ class AppRouter {
           ),
         ],
       ),
-
-      // ==================== Profile Routes ====================
       GoRoute(
         path: AppRoutes.profile,
         name: 'profile',
@@ -401,15 +383,12 @@ class AppRouter {
           ),
         ],
       ),
-
-      // ==================== Statistics Route ====================
       GoRoute(
         path: AppRoutes.statistics,
         name: 'statistics',
         builder: (context, state) => const MainTabsPage(),
       ),
     ],
-
     errorBuilder: (context, state) => Scaffold(
       body: Center(
         child: Column(

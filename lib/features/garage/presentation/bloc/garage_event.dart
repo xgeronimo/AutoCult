@@ -7,12 +7,10 @@ abstract class GarageEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Загрузить автомобили пользователя
 class GarageLoadCars extends GarageEvent {
   const GarageLoadCars();
 }
 
-/// Добавить автомобиль
 class GarageAddCar extends GarageEvent {
   final String brand;
   final String model;
@@ -62,7 +60,6 @@ class GarageAddCar extends GarageEvent {
       ];
 }
 
-/// Удалить фото автомобиля
 class GarageDeleteCarPhoto extends GarageEvent {
   final String carId;
 
@@ -72,7 +69,6 @@ class GarageDeleteCarPhoto extends GarageEvent {
   List<Object?> get props => [carId];
 }
 
-/// Обновить фото автомобиля
 class GarageUpdateCarPhoto extends GarageEvent {
   final String carId;
   final String photoPath;
@@ -86,7 +82,6 @@ class GarageUpdateCarPhoto extends GarageEvent {
   List<Object?> get props => [carId, photoPath];
 }
 
-/// Обновить автомобиль
 class GarageUpdateCar extends GarageEvent {
   final CarEntity car;
 
@@ -96,7 +91,6 @@ class GarageUpdateCar extends GarageEvent {
   List<Object?> get props => [car];
 }
 
-/// Удалить автомобиль
 class GarageDeleteCar extends GarageEvent {
   final String carId;
 
@@ -106,7 +100,6 @@ class GarageDeleteCar extends GarageEvent {
   List<Object?> get props => [carId];
 }
 
-/// Отметить автомобиль как бывший
 class GarageMarkAsFormer extends GarageEvent {
   final String carId;
 
@@ -116,7 +109,6 @@ class GarageMarkAsFormer extends GarageEvent {
   List<Object?> get props => [carId];
 }
 
-/// Выбрать текущий автомобиль
 class GarageSelectCar extends GarageEvent {
   final String carId;
 

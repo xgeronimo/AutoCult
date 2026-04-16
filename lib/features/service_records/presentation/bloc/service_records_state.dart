@@ -1,6 +1,5 @@
 part of 'service_records_bloc.dart';
 
-/// Базовый класс состояний для записей об обслуживании
 abstract class ServiceRecordsState extends Equatable {
   const ServiceRecordsState();
 
@@ -8,17 +7,14 @@ abstract class ServiceRecordsState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Начальное состояние
 class ServiceRecordsInitial extends ServiceRecordsState {
   const ServiceRecordsInitial();
 }
 
-/// Загрузка
 class ServiceRecordsLoading extends ServiceRecordsState {
   const ServiceRecordsLoading();
 }
 
-/// Записи загружены
 class ServiceRecordsLoaded extends ServiceRecordsState {
   final List<ServiceRecordEntity> records;
   final String carId;
@@ -32,7 +28,6 @@ class ServiceRecordsLoaded extends ServiceRecordsState {
   List<Object?> get props => [records, carId];
 }
 
-/// Запись успешно добавлена
 class ServiceRecordsAddSuccess extends ServiceRecordsState {
   final ServiceRecordEntity record;
 
@@ -42,7 +37,6 @@ class ServiceRecordsAddSuccess extends ServiceRecordsState {
   List<Object?> get props => [record];
 }
 
-/// Запись успешно обновлена
 class ServiceRecordsUpdateSuccess extends ServiceRecordsState {
   final ServiceRecordEntity record;
 
@@ -52,7 +46,6 @@ class ServiceRecordsUpdateSuccess extends ServiceRecordsState {
   List<Object?> get props => [record];
 }
 
-/// Ошибка
 class ServiceRecordsError extends ServiceRecordsState {
   final String message;
 

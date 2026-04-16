@@ -61,8 +61,7 @@ class MonthlyBarChart extends StatelessWidget {
               children: List.generate(12, (index) {
                 final month = index + 1;
                 final amount = amountByMonth[month] ?? 0;
-                final fraction =
-                    maxAmount > 0 ? (amount / maxAmount) : 0.0;
+                final fraction = maxAmount > 0 ? (amount / maxAmount) : 0.0;
                 final isSelected = month == selectedMonth;
 
                 return Expanded(
@@ -88,7 +87,9 @@ class MonthlyBarChart extends StatelessWidget {
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.easeOutCubic,
-                          height: fraction > 0 ? (fraction * 90.h).clamp(4.h, 90.h) : 4.h,
+                          height: fraction > 0
+                              ? (fraction * 90.h).clamp(4.h, 90.h)
+                              : 4.h,
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? AppColors.primary

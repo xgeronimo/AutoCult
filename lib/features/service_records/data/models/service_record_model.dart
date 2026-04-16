@@ -1,6 +1,5 @@
 import '../../domain/entities/service_record_entity.dart';
 
-/// Модель записи ТО для работы с Firebase
 class ServiceRecordModel extends ServiceRecordEntity {
   const ServiceRecordModel({
     required super.id,
@@ -18,7 +17,6 @@ class ServiceRecordModel extends ServiceRecordEntity {
     required super.updatedAt,
   });
 
-  /// Создание из JSON (Firestore)
   factory ServiceRecordModel.fromJson(Map<String, dynamic> json) {
     return ServiceRecordModel(
       id: json['id'] as String,
@@ -43,7 +41,6 @@ class ServiceRecordModel extends ServiceRecordEntity {
     );
   }
 
-  /// Преобразование в JSON (Firestore)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -62,7 +59,6 @@ class ServiceRecordModel extends ServiceRecordEntity {
     };
   }
 
-  /// Создание из Entity
   factory ServiceRecordModel.fromEntity(ServiceRecordEntity entity) {
     return ServiceRecordModel(
       id: entity.id,
@@ -81,7 +77,6 @@ class ServiceRecordModel extends ServiceRecordEntity {
     );
   }
 
-  /// Копирование с изменениями
   ServiceRecordModel copyWith({
     String? id,
     String? carId,

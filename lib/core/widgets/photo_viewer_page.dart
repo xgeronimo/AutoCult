@@ -119,8 +119,6 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
                 );
               },
             ),
-
-            // Top bar
             Positioned(
               top: 0,
               left: 0,
@@ -156,8 +154,6 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
                 ),
               ),
             ),
-
-            // Page dots
             if (widget.photoUrls.length > 1)
               Positioned(
                 bottom: 0,

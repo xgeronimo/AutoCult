@@ -104,7 +104,8 @@ class CarRepositoryImpl implements CarRepository {
   }
 
   @override
-  Future<Either<Failure, CarEntity>> updateMileage(String carId, int mileage) async {
+  Future<Either<Failure, CarEntity>> updateMileage(
+      String carId, int mileage) async {
     try {
       if (!await _checkConnection()) {
         return const Left(NetworkFailure());

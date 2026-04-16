@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_colors.dart';
 
-/// Текстовые стили приложения
 class AppTextStyles {
   AppTextStyles._();
 
-  // Заголовки
   static TextStyle get h1 => TextStyle(
         fontSize: 32.sp,
         fontWeight: FontWeight.bold,
@@ -33,7 +31,6 @@ class AppTextStyles {
         height: 1.4,
       );
 
-  // Основной текст
   static TextStyle get bodyLarge => TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.normal,
@@ -52,7 +49,6 @@ class AppTextStyles {
         height: 1.5,
       );
 
-  // Подписи
   static TextStyle get caption => TextStyle(
         fontSize: 12.sp,
         fontWeight: FontWeight.normal,
@@ -67,7 +63,6 @@ class AppTextStyles {
         letterSpacing: 1.5,
       );
 
-  // Кнопки
   static TextStyle get buttonLarge => TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.w600,
@@ -88,7 +83,6 @@ class AppTextStyles {
         height: 1.2,
       );
 
-  // Поля ввода
   static TextStyle get input => TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.normal,
@@ -115,7 +109,6 @@ class AppTextStyles {
         color: AppColors.error,
       );
 
-  // Специальные
   static TextStyle get price => TextStyle(
         fontSize: 18.sp,
         fontWeight: FontWeight.bold,

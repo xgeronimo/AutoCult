@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../bloc/profile_bloc.dart';
@@ -35,28 +36,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     return BlocListener<ProfileBloc, ProfileState>(
       listener: (context, state) {
         if (state is ProfilePasswordChanged) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Пароль успешно изменён'),
-              backgroundColor: AppColors.primary,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: 'Пароль успешно изменён', type: SnackBarType.success);
           context.pop();
         } else if (state is ProfileError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: state.message, type: SnackBarType.error);
         }
       },
       child: Scaffold(
@@ -178,9 +163,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   void _onSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<ProfileBloc>().add(ProfileChangePasswordRequested(
-        currentPassword: _currentPasswordController.text,
-        newPassword: _newPasswordController.text,
-      ));
+            currentPassword: _currentPasswordController.text,
+            newPassword: _newPasswordController.text,
+          ));
     }
   }
 }

@@ -3,7 +3,6 @@ import '../../../../core/errors/failures.dart';
 import '../entities/service_record_entity.dart';
 import '../repositories/service_record_repository.dart';
 
-/// UseCase для получения записей об обслуживании
 class GetRecordsUseCase {
   final ServiceRecordRepository repository;
 

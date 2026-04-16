@@ -4,7 +4,6 @@ import '../../../../core/constants/app_constants.dart';
 import '../../domain/entities/service_record_entity.dart';
 import '../models/service_record_model.dart';
 
-/// Интерфейс удалённого источника данных записей ТО
 abstract class ServiceRecordRemoteDataSource {
   Future<List<ServiceRecordModel>> getRecords(String carId);
   Future<List<ServiceRecordModel>> getRecordsByUserId(String userId);
@@ -12,13 +11,15 @@ abstract class ServiceRecordRemoteDataSource {
   Future<ServiceRecordModel> addRecord(ServiceRecordModel record);
   Future<ServiceRecordModel> updateRecord(ServiceRecordModel record);
   Future<void> deleteRecord(String recordId);
-  Future<List<ServiceRecordModel>> getRecordsByCategory(String carId, ServiceCategory category);
-  Future<List<ServiceRecordModel>> getRecentRecords(String userId, {int limit = 10});
+  Future<List<ServiceRecordModel>> getRecordsByCategory(
+      String carId, ServiceCategory category);
+  Future<List<ServiceRecordModel>> getRecentRecords(String userId,
+      {int limit = 10});
   Stream<List<ServiceRecordModel>> watchRecords(String carId);
 }
 
-/// Реализация удалённого источника данных записей ТО (Firebase)
-class ServiceRecordRemoteDataSourceImpl implements ServiceRecordRemoteDataSource {
+class ServiceRecordRemoteDataSourceImpl
+    implements ServiceRecordRemoteDataSource {
   final FirebaseFirestore _firestore;
 
   ServiceRecordRemoteDataSourceImpl({required FirebaseFirestore firestore})
@@ -30,15 +31,13 @@ class ServiceRecordRemoteDataSourceImpl implements ServiceRecordRemoteDataSource
   @override
   Future<List<ServiceRecordModel>> getRecords(String carId) async {
     try {
-      final snapshot = await _recordsCollection
-          .where('carId', isEqualTo: carId)
-          .get();
+      final snapshot =
+          await _recordsCollection.where('carId', isEqualTo: carId).get();
 
       final records = snapshot.docs
           .map((doc) => ServiceRecordModel.fromJson(doc.data()))
           .toList();
 
-      // Сортируем на клиенте, чтобы избежать необходимости в composite index
       records.sort((a, b) => b.date.compareTo(a.date));
 
       return records;
@@ -50,9 +49,8 @@ class ServiceRecordRemoteDataSourceImpl implements ServiceRecordRemoteDataSource
   @override
   Future<List<ServiceRecordModel>> getRecordsByUserId(String userId) async {
     try {
-      final snapshot = await _recordsCollection
-          .where('userId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _recordsCollection.where('userId', isEqualTo: userId).get();
 
       final records = snapshot.docs
           .map((doc) => ServiceRecordModel.fromJson(doc.data()))
@@ -126,7 +124,6 @@ class ServiceRecordRemoteDataSourceImpl implements ServiceRecordRemoteDataSource
           .map((doc) => ServiceRecordModel.fromJson(doc.data()))
           .toList();
 
-      // Сортируем на клиенте
       records.sort((a, b) => b.date.compareTo(a.date));
 
       return records;
@@ -141,15 +138,13 @@ class ServiceRecordRemoteDataSourceImpl implements ServiceRecordRemoteDataSource
     int limit = 10,
   }) async {
     try {
-      final snapshot = await _recordsCollection
-          .where('userId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _recordsCollection.where('userId', isEqualTo: userId).get();
 
       final records = snapshot.docs
           .map((doc) => ServiceRecordModel.fromJson(doc.data()))
           .toList();
 
-      // Сортируем на клиенте и берём лимит
       records.sort((a, b) => b.date.compareTo(a.date));
 
       return records.take(limit).toList();
@@ -164,12 +159,12 @@ class ServiceRecordRemoteDataSourceImpl implements ServiceRecordRemoteDataSource
         .where('carId', isEqualTo: carId)
         .snapshots()
         .map((snapshot) {
-          final records = snapshot.docs
-              .map((doc) => ServiceRecordModel.fromJson(doc.data()))
-              .toList();
-          // Сортируем на клиенте
-          records.sort((a, b) => b.date.compareTo(a.date));
-          return records;
-        });
+      final records = snapshot.docs
+          .map((doc) => ServiceRecordModel.fromJson(doc.data()))
+          .toList();
+
+      records.sort((a, b) => b.date.compareTo(a.date));
+      return records;
+    });
   }
 }

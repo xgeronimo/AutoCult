@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/success_dialog.dart';
 import '../../../../injection_container.dart';
@@ -15,7 +16,6 @@ import '../../../auth/presentation/widgets/auth_text_field.dart';
 import '../../domain/entities/service_record_entity.dart';
 import '../bloc/service_records_bloc.dart';
 
-/// Страница добавления записи об обслуживании
 class AddServiceRecordPage extends StatefulWidget {
   final String carId;
 
@@ -71,18 +71,14 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
             SuccessDialog.showRecordAdded(
               context,
               onContinue: () {
-                Navigator.of(context).pop(); // Закрыть диалог
-                context.pop(); // Вернуться назад
+                Navigator.of(context).pop();
+                context.pop();
               },
             );
           } else if (state is ServiceRecordsError) {
             setState(() => _isLoading = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppSnackBar.show(context,
+                message: state.message, type: SnackBarType.error);
           }
         },
         child: Scaffold(
@@ -90,18 +86,13 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
           body: SafeArea(
             child: Column(
               children: [
-                // AppBar
                 const CustomAppBar(title: 'Новая запись'),
-
-                // Content
                 Expanded(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Column(
                       children: [
                         SizedBox(height: 16.h),
-
-                        // Название записи
                         AuthTextField(
                           controller: _titleController,
                           label: 'Название записи',
@@ -113,10 +104,7 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
                             }
                           },
                         ),
-
                         SizedBox(height: 16.h),
-
-                        // Стоимость (необязательно)
                         AuthTextField(
                           controller: _costController,
                           label: 'Стоимость',
@@ -124,15 +112,9 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
                           isRequired: false,
                           keyboardType: TextInputType.number,
                         ),
-
                         SizedBox(height: 16.h),
-
-                        // Категория
                         _buildCategoryField(),
-
                         SizedBox(height: 16.h),
-
-                        // Пробег
                         AuthTextField(
                           controller: _mileageController,
                           label: 'Пробег',
@@ -145,29 +127,17 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
                             }
                           },
                         ),
-
                         SizedBox(height: 16.h),
-
-                        // Дата
                         _buildDateField(),
-
                         SizedBox(height: 16.h),
-
-                        // Описание (необязательно)
                         _buildDescriptionField(),
-
                         SizedBox(height: 16.h),
-
-                        // Фотографии
                         _buildPhotosSection(),
-
                         SizedBox(height: 24.h),
                       ],
                     ),
                   ),
                 ),
-
-                // Кнопка добавления
                 Padding(
                   padding: EdgeInsets.all(20.w),
                   child: SizedBox(
@@ -402,7 +372,8 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
             ..._photoPaths.asMap().entries.map(
                   (entry) => _buildPhotoThumbnail(
                     entry.value,
-                    onRemove: () => setState(() => _photoPaths.removeAt(entry.key)),
+                    onRemove: () =>
+                        setState(() => _photoPaths.removeAt(entry.key)),
                   ),
                 ),
             _buildAddPhotoButton(),
@@ -508,14 +479,12 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
   }
 
   void _onAdd(BuildContext blocContext) {
-    // Сбрасываем ошибки
     setState(() {
       _titleError = null;
       _categoryError = null;
       _mileageError = null;
     });
 
-    // Валидация
     bool hasError = false;
 
     if (_titleController.text.trim().isEmpty) {
@@ -545,21 +514,15 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
       return;
     }
 
-    // Получаем userId из AuthBloc
     final authState = context.read<AuthBloc>().state;
     if (authState is! AuthAuthenticated) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ошибка авторизации'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      AppSnackBar.show(context,
+          message: 'Ошибка авторизации', type: SnackBarType.error);
       return;
     }
 
     setState(() => _isLoading = true);
 
-    // Сохраняем через BLoC
     final cost = _costController.text.trim().isNotEmpty
         ? double.tryParse(_costController.text.trim())
         : null;
@@ -585,7 +548,6 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
   }
 }
 
-/// Селектор категорий
 class _CategorySelector extends StatelessWidget {
   final ServiceCategory? selectedCategory;
 
@@ -598,7 +560,6 @@ class _CategorySelector extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Handle
           Container(
             width: 40.w,
             height: 4.h,
@@ -608,8 +569,6 @@ class _CategorySelector extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24.h),
-
-          // Заголовок
           Text(
             'Выберите категорию',
             style: TextStyle(
@@ -619,8 +578,6 @@ class _CategorySelector extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
-
-          // Список категорий
           Flexible(
             child: ListView.builder(
               shrinkWrap: true,
@@ -630,15 +587,17 @@ class _CategorySelector extends StatelessWidget {
                 final isSelected = category == selectedCategory;
 
                 return ListTile(
-                  leading: Text(
+                  leading: Icon(
                     category.icon,
-                    style: TextStyle(fontSize: 24.sp),
+                    size: 24.sp,
+                    color: AppColors.textSecondaryLight,
                   ),
                   title: Text(
                     category.label,
                     style: TextStyle(
                       fontSize: 16.sp,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.normal,
                       color: AppColors.textPrimaryLight,
                     ),
                   ),

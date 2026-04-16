@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/success_dialog.dart';
 import '../../../../injection_container.dart';
@@ -68,12 +69,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
             );
           } else if (state is ExpensesError) {
             setState(() => _isLoading = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppSnackBar.show(context,
+                message: state.message, type: SnackBarType.error);
           }
         },
         child: Scaffold(
@@ -206,10 +203,10 @@ class _AddExpensePageState extends State<AddExpensePage> {
       ExpenseCategory.tollRoad => 'assets/icons/route-fill.svg',
       ExpenseCategory.wash => 'assets/icons/drop-fill.svg',
       ExpenseCategory.carCare => 'assets/icons/brush-fill.svg',
-      ExpenseCategory.accessories => 'assets/icons/magic-fill.svg',
+      ExpenseCategory.accessories => 'assets/icons/star-s-fill.svg',
       ExpenseCategory.taxes => 'assets/icons/bank-fill.svg',
-      ExpenseCategory.insurance => 'assets/icons/magic-fill.svg',
-      ExpenseCategory.other => 'assets/icons/bank-fill.svg',
+      ExpenseCategory.insurance => 'assets/icons/passport-fill.svg',
+      ExpenseCategory.other => 'assets/icons/bubble-chart-fill.svg',
     };
   }
 
@@ -348,12 +345,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
 
     final authState = context.read<AuthBloc>().state;
     if (authState is! AuthAuthenticated) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ошибка авторизации'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      AppSnackBar.show(context,
+          message: 'Ошибка авторизации', type: SnackBarType.error);
       return;
     }
 

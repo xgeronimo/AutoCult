@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../theme/app_colors.dart';
 
-/// Универсальное текстовое поле приложения
 class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
@@ -100,7 +99,6 @@ class AppTextField extends StatelessWidget {
   }
 }
 
-/// Текстовое поле для пароля с кнопкой показа/скрытия
 class AppPasswordField extends StatefulWidget {
   final TextEditingController? controller;
   final String? label;
@@ -145,7 +143,9 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
       keyboardType: TextInputType.visiblePassword,
       suffixIcon: IconButton(
         icon: Icon(
-          _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+          _obscureText
+              ? Icons.visibility_outlined
+              : Icons.visibility_off_outlined,
           color: AppColors.textSecondaryLight,
         ),
         onPressed: () => setState(() => _obscureText = !_obscureText),

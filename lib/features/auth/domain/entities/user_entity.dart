@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Сущность пользователя
 class UserEntity extends Equatable {
   final String id;
   final String email;
@@ -18,10 +17,8 @@ class UserEntity extends Equatable {
     this.lastLoginAt,
   });
 
-  /// Полное имя или email
   String get nameOrEmail => displayName ?? email;
 
-  /// Инициалы
   String get initials {
     if (displayName != null && displayName!.isNotEmpty) {
       final parts = displayName!.split(' ');
@@ -34,5 +31,6 @@ class UserEntity extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, email, displayName, photoUrl, createdAt, lastLoginAt];
+  List<Object?> get props =>
+      [id, email, displayName, photoUrl, createdAt, lastLoginAt];
 }

@@ -47,8 +47,8 @@ class StatisticsLoaded extends StatisticsState {
 
   double get totalAllTime => allExpenses.fold(0, (sum, e) => sum + e.amount);
 
-  double get serviceRecordsTotalAmount => filteredServiceRecords.fold(
-      0.0, (sum, r) => sum + (r.cost ?? 0));
+  double get serviceRecordsTotalAmount =>
+      filteredServiceRecords.fold(0.0, (sum, r) => sum + (r.cost ?? 0));
 
   double get serviceRecordsTotalAllTime =>
       allServiceRecords.fold(0.0, (sum, r) => sum + (r.cost ?? 0));
@@ -69,8 +69,7 @@ class StatisticsLoaded extends StatisticsState {
     final map = <ServiceCategory, double>{};
     for (final record in filteredServiceRecords) {
       if (record.cost != null && record.cost! > 0) {
-        map[record.category] =
-            (map[record.category] ?? 0) + record.cost!;
+        map[record.category] = (map[record.category] ?? 0) + record.cost!;
       }
     }
     return map;
@@ -101,8 +100,7 @@ class StatisticsLoaded extends StatisticsState {
       if (record.date.year == selectedMonth.year &&
           record.cost != null &&
           record.cost! > 0) {
-        map[record.date.month] =
-            (map[record.date.month] ?? 0) + record.cost!;
+        map[record.date.month] = (map[record.date.month] ?? 0) + record.cost!;
       }
     }
     return map;

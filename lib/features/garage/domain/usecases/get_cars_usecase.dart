@@ -4,7 +4,6 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/car_entity.dart';
 import '../repositories/car_repository.dart';
 
-/// Use Case для получения списка автомобилей
 class GetCarsUseCase implements UseCase<List<CarEntity>, String> {
   final CarRepository repository;
 

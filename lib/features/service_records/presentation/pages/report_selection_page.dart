@@ -8,6 +8,7 @@ import 'package:printing/printing.dart';
 
 import '../../../../core/services/pdf_report_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../injection_container.dart';
 import '../../../garage/domain/entities/car_entity.dart';
@@ -95,16 +96,9 @@ class _ReportSelectionPageState extends State<ReportSelectionPage> {
       await _showReportActions(pdfBytes);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка при формировании отчёта: $e'),
-          backgroundColor: AppColors.error,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-        ),
-      );
+      AppSnackBar.show(context,
+          message: 'Ошибка при формировании отчёта: $e',
+          type: SnackBarType.error);
     } finally {
       if (mounted) setState(() => _isGenerating = false);
     }
@@ -311,7 +305,7 @@ class _ReportSelectionPageState extends State<ReportSelectionPage> {
           ),
           ...sortedCategories.map(
             (cat) => _buildChip(
-              label: '${cat.icon} ${cat.label}',
+              label: cat.label,
               isSelected: _filterCategory == cat,
               onTap: () => setState(() {
                 _filterCategory = _filterCategory == cat ? null : cat;
@@ -334,6 +328,7 @@ class _ReportSelectionPageState extends State<ReportSelectionPage> {
         onTap: onTap,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary : AppColors.inputBackground,
             borderRadius: BorderRadius.circular(20.r),
@@ -458,8 +453,14 @@ class _ReportSelectionPageState extends State<ReportSelectionPage> {
                     SizedBox(height: 4.h),
                     Row(
                       children: [
+                        Icon(
+                          record.category.icon,
+                          size: 12.sp,
+                          color: AppColors.textSecondaryLight,
+                        ),
+                        SizedBox(width: 4.w),
                         Text(
-                          '${record.category.icon} ${record.category.label}',
+                          record.category.label,
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: AppColors.textSecondaryLight,

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
-/// Селектор марки автомобиля
 class CarBrandSelector extends StatefulWidget {
   const CarBrandSelector({super.key});
 
@@ -76,7 +75,6 @@ class _CarBrandSelectorState extends State<CarBrandSelector> {
           padding: EdgeInsets.all(24.w),
           child: Column(
             children: [
-              // Handle
               Container(
                 width: 40.w,
                 height: 4.h,
@@ -86,8 +84,6 @@ class _CarBrandSelectorState extends State<CarBrandSelector> {
                 ),
               ),
               SizedBox(height: 24.h),
-
-              // Заголовок
               Text(
                 'Выберите марку',
                 style: TextStyle(
@@ -97,8 +93,6 @@ class _CarBrandSelectorState extends State<CarBrandSelector> {
                 ),
               ),
               SizedBox(height: 16.h),
-
-              // Поиск
               TextField(
                 controller: _searchController,
                 onChanged: (value) {
@@ -131,8 +125,6 @@ class _CarBrandSelectorState extends State<CarBrandSelector> {
                 ),
               ),
               SizedBox(height: 16.h),
-
-              // Список марок
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,

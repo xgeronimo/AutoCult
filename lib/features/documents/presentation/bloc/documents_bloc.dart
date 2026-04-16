@@ -103,7 +103,6 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
     emit(const DocumentsLoading());
 
     try {
-      // Delete photo from storage
       final doc = currentState.documents
           .where((d) => d.id == event.documentId)
           .firstOrNull;

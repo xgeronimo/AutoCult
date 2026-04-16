@@ -23,9 +23,8 @@ class ReminderRemoteDataSourceImpl implements ReminderRemoteDataSource {
   @override
   Future<List<ReminderModel>> getReminders(String userId) async {
     try {
-      final snapshot = await _collection
-          .where('userId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _collection.where('userId', isEqualTo: userId).get();
 
       final reminders = snapshot.docs
           .map((doc) => ReminderModel.fromJson(doc.data()))

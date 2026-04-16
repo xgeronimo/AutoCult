@@ -21,9 +21,8 @@ class DocumentRemoteDataSourceImpl implements DocumentRemoteDataSource {
   @override
   Future<List<DocumentModel>> getDocuments(String carId) async {
     try {
-      final snapshot = await _documentsCollection
-          .where('carId', isEqualTo: carId)
-          .get();
+      final snapshot =
+          await _documentsCollection.where('carId', isEqualTo: carId).get();
 
       final docs = snapshot.docs
           .map((doc) => DocumentModel.fromJson(doc.data()))

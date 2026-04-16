@@ -1,6 +1,5 @@
 part of 'auth_bloc.dart';
 
-/// Базовый класс событий авторизации
 abstract class AuthEvent extends Equatable {
   const AuthEvent();
 
@@ -8,12 +7,10 @@ abstract class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Проверка состояния авторизации при запуске
 class AuthCheckRequested extends AuthEvent {
   const AuthCheckRequested();
 }
 
-/// Запрос на вход
 class AuthSignInRequested extends AuthEvent {
   final String email;
   final String password;
@@ -27,7 +24,6 @@ class AuthSignInRequested extends AuthEvent {
   List<Object> get props => [email, password];
 }
 
-/// Запрос на регистрацию
 class AuthSignUpRequested extends AuthEvent {
   final String email;
   final String password;
@@ -43,12 +39,10 @@ class AuthSignUpRequested extends AuthEvent {
   List<Object?> get props => [email, password, displayName];
 }
 
-/// Запрос на выход
 class AuthSignOutRequested extends AuthEvent {
   const AuthSignOutRequested();
 }
 
-/// Запрос на сброс пароля
 class AuthResetPasswordRequested extends AuthEvent {
   final String email;
 
@@ -58,7 +52,6 @@ class AuthResetPasswordRequested extends AuthEvent {
   List<Object> get props => [email];
 }
 
-/// Изменение состояния авторизации (от Firebase)
 class AuthStateChanged extends AuthEvent {
   final UserEntity? user;
 

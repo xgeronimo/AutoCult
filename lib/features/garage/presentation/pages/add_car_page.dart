@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../app/router/app_router.dart';
 import '../../../../injection_container.dart';
@@ -16,7 +17,6 @@ import '../widgets/car_brand_selector.dart';
 import '../widgets/car_model_selector.dart';
 import '../widgets/year_selector.dart';
 
-/// Страница добавления автомобиля (многошаговая форма)
 class AddCarPage extends StatefulWidget {
   const AddCarPage({super.key});
 
@@ -28,24 +28,20 @@ class _AddCarPageState extends State<AddCarPage> {
   int _currentStep = 0;
   final int _totalSteps = 3;
 
-  // Step 1: Основная информация
   String? _selectedBrand;
   String? _selectedModel;
   int? _selectedYear;
   BodyType _selectedBodyType = BodyType.sedan;
   final _licensePlateController = TextEditingController();
 
-  // Step 2: Фотографии
   final List<String> _carPhotos = [];
   String? _ptsPhoto;
   String? _stsPhoto;
   String? _insurancePhoto;
 
-  // Step 3: Дополнительные данные
   final _vinController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  // Ошибки валидации
   String? _brandError;
   String? _modelError;
   String? _yearError;
@@ -66,20 +62,14 @@ class _AddCarPageState extends State<AddCarPage> {
     return BlocListener<GarageBloc, GarageState>(
       listener: (context, state) {
         if (state is GarageLoaded && _isLoading) {
-          // Успешно добавлено
           setState(() {
             _isLoading = false;
-            _currentStep = 3; // Экран успеха
+            _currentStep = 3;
           });
         } else if (state is GarageError && _isLoading) {
-          // Ошибка
           setState(() => _isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-            ),
-          );
+          AppSnackBar.show(context,
+              message: state.message, type: SnackBarType.error);
         }
       },
       child: Scaffold(
@@ -87,21 +77,14 @@ class _AddCarPageState extends State<AddCarPage> {
         body: SafeArea(
           child: Column(
             children: [
-              // AppBar
               const CustomAppBar(title: 'Новый автомобиль'),
-
-              // Progress indicator
               _buildProgressIndicator(),
-
-              // Content
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: _buildCurrentStep(),
                 ),
               ),
-
-              // Buttons
               _buildButtons(),
             ],
           ),
@@ -148,14 +131,11 @@ class _AddCarPageState extends State<AddCarPage> {
     }
   }
 
-  /// Шаг 1: Основная информация
   Widget _buildStep1() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 8.h),
-
-        // Марка авто
         _buildSelectorField(
           label: 'Марка авто',
           value: _selectedBrand,
@@ -164,8 +144,6 @@ class _AddCarPageState extends State<AddCarPage> {
           onTap: _selectBrand,
         ),
         SizedBox(height: 16.h),
-
-        // Модель
         _buildSelectorField(
           label: 'Модель',
           value: _selectedModel,
@@ -174,8 +152,6 @@ class _AddCarPageState extends State<AddCarPage> {
           onTap: _selectedBrand != null ? _selectModel : null,
         ),
         SizedBox(height: 16.h),
-
-        // Год выпуска
         _buildSelectorField(
           label: 'Год выпуска',
           value: _selectedYear?.toString(),
@@ -184,12 +160,8 @@ class _AddCarPageState extends State<AddCarPage> {
           onTap: _selectYear,
         ),
         SizedBox(height: 16.h),
-
-        // Тип кузова
         _buildBodyTypeSelector(),
         SizedBox(height: 16.h),
-
-        // Гос. номер
         AuthTextField(
           controller: _licensePlateController,
           label: 'Гос. номер',
@@ -202,20 +174,16 @@ class _AddCarPageState extends State<AddCarPage> {
             }
           },
         ),
-
         SizedBox(height: 24.h),
       ],
     );
   }
 
-  /// Шаг 2: Фотографии
   Widget _buildStep2() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 8.h),
-
-        // Фотографии автомобиля
         Text(
           'Добавьте фотографии автомобиля',
           style: TextStyle(
@@ -233,13 +201,9 @@ class _AddCarPageState extends State<AddCarPage> {
           ),
         ),
         SizedBox(height: 16.h),
-
-        // Фото авто
-        _buildPhotoGrid(_carPhotos, onAdd: _addCarPhoto, onRemove: _removeCarPhoto),
-
+        _buildPhotoGrid(_carPhotos,
+            onAdd: _addCarPhoto, onRemove: _removeCarPhoto),
         SizedBox(height: 32.h),
-
-        // Фотографии документов
         Text(
           'Добавьте фотографии ваших документов',
           style: TextStyle(
@@ -258,30 +222,24 @@ class _AddCarPageState extends State<AddCarPage> {
           ),
         ),
         SizedBox(height: 16.h),
-
-        // ПТС
-        _buildDocumentPhotoField('ПТС', _ptsPhoto, onAdd: () => _addDocumentPhoto('pts')),
+        _buildDocumentPhotoField('ПТС', _ptsPhoto,
+            onAdd: () => _addDocumentPhoto('pts')),
         SizedBox(height: 16.h),
-
-        // СТС
-        _buildDocumentPhotoField('СТС', _stsPhoto, onAdd: () => _addDocumentPhoto('sts')),
+        _buildDocumentPhotoField('СТС', _stsPhoto,
+            onAdd: () => _addDocumentPhoto('sts')),
         SizedBox(height: 16.h),
-
-        // Страховка
-        _buildDocumentPhotoField('Страховка', _insurancePhoto, onAdd: () => _addDocumentPhoto('insurance')),
-
+        _buildDocumentPhotoField('Страховка', _insurancePhoto,
+            onAdd: () => _addDocumentPhoto('insurance')),
         SizedBox(height: 24.h),
       ],
     );
   }
 
-  /// Шаг 3: Дополнительные данные
   Widget _buildStep3() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 8.h),
-
         Text(
           'Дополнительные данные',
           style: TextStyle(
@@ -299,8 +257,6 @@ class _AddCarPageState extends State<AddCarPage> {
           ),
         ),
         SizedBox(height: 24.h),
-
-        // VIN номер
         AuthTextField(
           controller: _vinController,
           label: 'VIN номер',
@@ -308,24 +264,18 @@ class _AddCarPageState extends State<AddCarPage> {
           isRequired: false,
         ),
         SizedBox(height: 16.h),
-
-        // Описание
         _buildDescriptionField(),
-
         SizedBox(height: 24.h),
       ],
     );
   }
 
-  /// Экран успеха
   Widget _buildSuccessStep() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: 100.h),
-          
-          // Иконка
           Container(
             width: 120.w,
             height: 120.w,
@@ -340,8 +290,6 @@ class _AddCarPageState extends State<AddCarPage> {
             ),
           ),
           SizedBox(height: 32.h),
-
-          // Текст
           Text(
             'Автомобиль добавлен',
             style: TextStyle(
@@ -380,7 +328,9 @@ class _AddCarPageState extends State<AddCarPage> {
                     right: type != BodyType.values.last ? 8.w : 0,
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : AppColors.inputBackground,
+                    color: isSelected
+                        ? AppColors.primary
+                        : AppColors.inputBackground,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Center(
@@ -389,7 +339,9 @@ class _AddCarPageState extends State<AddCarPage> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
-                        color: isSelected ? Colors.white : AppColors.textPrimaryLight,
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.textPrimaryLight,
                       ),
                     ),
                   ),
@@ -569,7 +521,8 @@ class _AddCarPageState extends State<AddCarPage> {
     );
   }
 
-  Widget _buildDocumentPhotoField(String label, String? photoPath, {required VoidCallback onAdd}) {
+  Widget _buildDocumentPhotoField(String label, String? photoPath,
+      {required VoidCallback onAdd}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -651,7 +604,6 @@ class _AddCarPageState extends State<AddCarPage> {
 
   Widget _buildButtons() {
     if (_currentStep == 3) {
-      // Экран успеха
       return Padding(
         padding: EdgeInsets.all(20.w),
         child: SizedBox(
@@ -679,7 +631,6 @@ class _AddCarPageState extends State<AddCarPage> {
     }
 
     if (_currentStep == 0) {
-      // Первый шаг - только "Следующий"
       return Padding(
         padding: EdgeInsets.all(20.w),
         child: SizedBox(
@@ -706,7 +657,6 @@ class _AddCarPageState extends State<AddCarPage> {
       );
     }
 
-    // Шаги 2 и 3 - две кнопки
     return Padding(
       padding: EdgeInsets.all(20.w),
       child: Row(
@@ -738,7 +688,9 @@ class _AddCarPageState extends State<AddCarPage> {
             child: SizedBox(
               height: 41.h,
               child: ElevatedButton(
-                onPressed: _isLoading ? null : (_currentStep == 2 ? _submitCar : _nextStep),
+                onPressed: _isLoading
+                    ? null
+                    : (_currentStep == 2 ? _submitCar : _nextStep),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
@@ -833,7 +785,9 @@ class _AddCarPageState extends State<AddCarPage> {
           mileage: 0,
           fuelType: FuelType.petrol,
           bodyType: _selectedBodyType,
-          vin: _vinController.text.trim().isNotEmpty ? _vinController.text.trim() : null,
+          vin: _vinController.text.trim().isNotEmpty
+              ? _vinController.text.trim()
+              : null,
           photoPath: _carPhotos.isNotEmpty ? _carPhotos.first : null,
           description: _descriptionController.text.trim().isNotEmpty
               ? _descriptionController.text.trim()
@@ -854,7 +808,7 @@ class _AddCarPageState extends State<AddCarPage> {
     if (result != null) {
       setState(() {
         _selectedBrand = result;
-        _selectedModel = null; // Сбрасываем модель при смене марки
+        _selectedModel = null;
         _brandError = null;
       });
     }
@@ -929,4 +883,3 @@ class _AddCarPageState extends State<AddCarPage> {
     }
   }
 }
-

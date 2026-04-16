@@ -2,19 +2,12 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
-import '../constants/app_constants.dart';
-
 class ImageStorageService {
   final FirebaseStorage _storage;
   static const _uuid = Uuid();
 
   ImageStorageService({required FirebaseStorage storage}) : _storage = storage;
 
-  /// Загружает файл в Firebase Storage и возвращает download URL.
-  ///
-  /// [storagePath] — папка в Storage (из [StoragePaths]).
-  /// [filePath] — локальный путь к файлу.
-  /// [ownerId] — ID пользователя (для организации по папкам).
   Future<String> uploadImage({
     required String storagePath,
     required String filePath,
@@ -23,7 +16,8 @@ class ImageStorageService {
     final file = File(filePath);
     final extension = filePath.split('.').last.toLowerCase();
     final fileName = '${_uuid.v4()}.$extension';
-    final ref = _storage.ref().child(storagePath).child(ownerId).child(fileName);
+    final ref =
+        _storage.ref().child(storagePath).child(ownerId).child(fileName);
 
     final metadata = SettableMetadata(
       contentType: 'image/$extension',
@@ -34,7 +28,6 @@ class ImageStorageService {
     return await ref.getDownloadURL();
   }
 
-  /// Загружает несколько файлов и возвращает список download URL.
   Future<List<String>> uploadImages({
     required String storagePath,
     required List<String> filePaths,
@@ -52,24 +45,19 @@ class ImageStorageService {
     return urls;
   }
 
-  /// Удаляет файл из Storage по его download URL.
   Future<void> deleteImage(String downloadUrl) async {
     try {
       final ref = _storage.refFromURL(downloadUrl);
       await ref.delete();
-    } on FirebaseException {
-      // Файл мог быть уже удалён — игнорируем
-    }
+    } on FirebaseException catch (_) {}
   }
 
-  /// Удаляет несколько файлов по их download URL.
   Future<void> deleteImages(List<String> downloadUrls) async {
     for (final url in downloadUrls) {
       await deleteImage(url);
     }
   }
 
-  /// Удаляет все файлы в папке пользователя.
   Future<void> deleteFolder({
     required String storagePath,
     required String ownerId,
@@ -80,8 +68,6 @@ class ImageStorageService {
       for (final item in result.items) {
         await item.delete();
       }
-    } on FirebaseException {
-      // Папка может не существовать
-    }
+    } on FirebaseException catch (_) {}
   }
 }

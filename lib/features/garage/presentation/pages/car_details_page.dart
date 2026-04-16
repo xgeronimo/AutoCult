@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/photo_viewer_page.dart';
 import '../../../../app/router/app_router.dart';
@@ -913,9 +914,10 @@ class _CarDetailsView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Center(
-                child: Text(
+                child: Icon(
                   record.category.icon,
-                  style: TextStyle(fontSize: 20.sp),
+                  size: 20.sp,
+                  color: AppColors.textSecondaryLight,
                 ),
               ),
             ),
@@ -1338,16 +1340,9 @@ class _CarDetailsView extends StatelessWidget {
         : <ServiceRecordEntity>[];
 
     if (records.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Нет записей для формирования отчёта'),
-          backgroundColor: AppColors.error,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-        ),
-      );
+      AppSnackBar.show(context,
+          message: 'Нет записей для формирования отчёта',
+          type: SnackBarType.error);
       return;
     }
 

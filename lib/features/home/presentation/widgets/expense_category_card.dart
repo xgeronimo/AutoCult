@@ -67,7 +67,6 @@ class ExpenseCategoryCard extends StatelessWidget {
     );
   }
 
-  /// (backgroundColor, iconColor)
   (Color, Color) get _categoryColors {
     switch (category) {
       case ExpenseCategory.fuel:
@@ -108,13 +107,13 @@ class ExpenseCategoryCard extends StatelessWidget {
       case ExpenseCategory.carCare:
         return 'assets/icons/brush-fill.svg';
       case ExpenseCategory.accessories:
-        return 'assets/icons/magic-fill.svg';
+        return 'assets/icons/star-s-fill.svg';
       case ExpenseCategory.taxes:
         return 'assets/icons/bank-fill.svg';
       case ExpenseCategory.insurance:
-        return 'assets/icons/magic-fill.svg';
+        return 'assets/icons/passport-fill.svg';
       case ExpenseCategory.other:
-        return 'assets/icons/bank-fill.svg';
+        return 'assets/icons/bubble-chart-fill.svg';
     }
   }
 }

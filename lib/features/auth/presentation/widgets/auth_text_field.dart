@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
-/// Текстовое поле для форм авторизации
 class AuthTextField extends StatelessWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -46,7 +45,6 @@ class AuthTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Label (по дизайну Figma: SF Pro Display, 600, 14px)
         RichText(
           text: TextSpan(
             text: label,
@@ -69,8 +67,6 @@ class AuthTextField extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.h),
-        
-        // TextField (по дизайну Figma: высота 51px, radius 10px)
         SizedBox(
           height: 51.h,
           child: TextField(
@@ -122,8 +118,6 @@ class AuthTextField extends StatelessWidget {
             ),
           ),
         ),
-        
-        // Error text
         if (hasError) ...[
           SizedBox(height: 6.h),
           Text(

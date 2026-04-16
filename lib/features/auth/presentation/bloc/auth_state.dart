@@ -1,6 +1,5 @@
 part of 'auth_bloc.dart';
 
-/// Базовый класс состояний авторизации
 abstract class AuthState extends Equatable {
   const AuthState();
 
@@ -8,13 +7,10 @@ abstract class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Начальное состояние
 class AuthInitial extends AuthState {}
 
-/// Загрузка
 class AuthLoading extends AuthState {}
 
-/// Пользователь авторизован
 class AuthAuthenticated extends AuthState {
   final UserEntity user;
 
@@ -24,10 +20,8 @@ class AuthAuthenticated extends AuthState {
   List<Object> get props => [user];
 }
 
-/// Пользователь не авторизован
 class AuthUnauthenticated extends AuthState {}
 
-/// Письмо для сброса пароля отправлено
 class AuthPasswordResetSent extends AuthState {
   final String email;
 
@@ -37,7 +31,6 @@ class AuthPasswordResetSent extends AuthState {
   List<Object> get props => [email];
 }
 
-/// Ошибка авторизации
 class AuthError extends AuthState {
   final String message;
 

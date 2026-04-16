@@ -139,9 +139,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     notificationService.cancelNotification(event.reminderId);
 
-    final optimistic = currentState.reminders
-        .where((r) => r.id != event.reminderId)
-        .toList();
+    final optimistic =
+        currentState.reminders.where((r) => r.id != event.reminderId).toList();
     emit(NotificationsLoaded(reminders: optimistic));
 
     final result = await repository.deleteReminder(event.reminderId);

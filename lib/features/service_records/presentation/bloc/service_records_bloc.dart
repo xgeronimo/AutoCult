@@ -13,8 +13,8 @@ import '../../domain/usecases/delete_record_usecase.dart';
 part 'service_records_event.dart';
 part 'service_records_state.dart';
 
-/// BLoC для управления записями об обслуживании
-class ServiceRecordsBloc extends Bloc<ServiceRecordsEvent, ServiceRecordsState> {
+class ServiceRecordsBloc
+    extends Bloc<ServiceRecordsEvent, ServiceRecordsState> {
   final GetRecordsUseCase getRecordsUseCase;
   final AddRecordUseCase addRecordUseCase;
   final UpdateRecordUseCase updateRecordUseCase;
@@ -60,7 +60,6 @@ class ServiceRecordsBloc extends Bloc<ServiceRecordsEvent, ServiceRecordsState> 
     emit(const ServiceRecordsLoading());
 
     try {
-      // Загружаем фото в Firebase Storage
       List<String> photoUrls = [];
       if (event.photoPaths.isNotEmpty) {
         photoUrls = await imageStorageService.uploadImages(
@@ -201,9 +200,8 @@ class ServiceRecordsBloc extends Bloc<ServiceRecordsEvent, ServiceRecordsState> 
         emit(currentState);
       },
       (_) {
-        final updatedRecords = currentState.records
-            .where((r) => r.id != event.recordId)
-            .toList();
+        final updatedRecords =
+            currentState.records.where((r) => r.id != event.recordId).toList();
 
         emit(ServiceRecordsLoaded(
           records: updatedRecords,

@@ -10,7 +10,8 @@ import '../../domain/repositories/personal_document_repository.dart';
 part 'personal_documents_event.dart';
 part 'personal_documents_state.dart';
 
-class PersonalDocumentsBloc extends Bloc<PersonalDocumentsEvent, PersonalDocumentsState> {
+class PersonalDocumentsBloc
+    extends Bloc<PersonalDocumentsEvent, PersonalDocumentsState> {
   final PersonalDocumentRepository repository;
   final ImageStorageService imageStorageService;
 

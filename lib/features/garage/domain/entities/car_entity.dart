@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Тип топлива
 enum FuelType {
   petrol('Бензин'),
   diesel('Дизель'),
@@ -12,7 +11,6 @@ enum FuelType {
   const FuelType(this.label);
 }
 
-/// Тип трансмиссии
 enum TransmissionType {
   manual('Механика'),
   automatic('Автомат'),
@@ -23,7 +21,6 @@ enum TransmissionType {
   const TransmissionType(this.label);
 }
 
-/// Тип кузова
 enum BodyType {
   sedan('Легковой'),
   suv('Кроссовер');
@@ -41,7 +38,6 @@ enum BodyType {
   }
 }
 
-/// Сущность автомобиля
 class CarEntity extends Equatable {
   final String id;
   final String userId;
@@ -83,10 +79,8 @@ class CarEntity extends Equatable {
     required this.updatedAt,
   });
 
-  /// Полное название автомобиля
   String get fullName => '$brand $model';
 
-  /// Полное название с годом
   String get fullNameWithYear => '$brand $model, $year';
 
   CarEntity copyWith({
@@ -131,7 +125,6 @@ class CarEntity extends Equatable {
     );
   }
 
-  /// Краткое описание
   String get shortDescription {
     final parts = <String>[];
     parts.add('$year г.');

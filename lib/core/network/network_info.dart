@@ -1,11 +1,9 @@
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-/// Интерфейс для проверки сетевого подключения
 abstract class NetworkInfo {
   Future<bool> get isConnected;
 }
 
-/// Реализация проверки сетевого подключения
 class NetworkInfoImpl implements NetworkInfo {
   final InternetConnectionChecker connectionChecker;
 

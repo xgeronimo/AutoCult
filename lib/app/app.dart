@@ -13,7 +13,6 @@ import '../features/statistics/presentation/bloc/statistics_bloc.dart';
 import '../injection_container.dart';
 import 'router/app_router.dart';
 
-/// Корневой виджет приложения
 class AutoCultApp extends StatelessWidget {
   const AutoCultApp({super.key});
 
@@ -38,13 +37,12 @@ class AutoCultApp extends StatelessWidget {
         ),
       ],
       child: ScreenUtilInit(
-        designSize: const Size(375, 812), // iPhone X
+        designSize: const Size(375, 812),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
           return BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
-              // При авторизации загружаем автомобили
               if (state is AuthAuthenticated) {
                 final garageBloc = context.read<GarageBloc>();
                 garageBloc.setUserId(state.user.id);
@@ -57,35 +55,28 @@ class AutoCultApp extends StatelessWidget {
             },
             child: BlocBuilder<AuthBloc, AuthState>(
               buildWhen: (previous, current) {
-                // Перестраиваем только при изменении состояния авторизации
                 return previous.runtimeType != current.runtimeType;
               },
               builder: (context, state) {
                 return MaterialApp.router(
-                title: AppStrings.appName,
-                debugShowCheckedModeBanner: false,
-                
-                // Темы
-                theme: AppTheme.light,
-                darkTheme: AppTheme.dark,
-                themeMode: ThemeMode.system,
-                
-                // Локализация
-                locale: const Locale('ru', 'RU'),
-                supportedLocales: const [
-                  Locale('ru', 'RU'),
-                  Locale('en', 'US'),
-                ],
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                
-                // Роутинг
-                routerConfig: AppRouter.router,
-              );
-            },
+                  title: AppStrings.appName,
+                  debugShowCheckedModeBanner: false,
+                  theme: AppTheme.light,
+                  darkTheme: AppTheme.dark,
+                  themeMode: ThemeMode.system,
+                  locale: const Locale('ru', 'RU'),
+                  supportedLocales: const [
+                    Locale('ru', 'RU'),
+                    Locale('en', 'US'),
+                  ],
+                  localizationsDelegates: const [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  routerConfig: AppRouter.router,
+                );
+              },
             ),
           );
         },

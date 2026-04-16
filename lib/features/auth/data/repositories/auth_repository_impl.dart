@@ -6,7 +6,6 @@ import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 
-/// Реализация репозитория авторизации
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
@@ -165,7 +164,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteAccount({required String password}) async {
+  Future<Either<Failure, void>> deleteAccount(
+      {required String password}) async {
     if (!await _checkConnection()) {
       return const Left(NetworkFailure());
     }

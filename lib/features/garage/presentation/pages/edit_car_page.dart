@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../injection_container.dart';
 import '../../../auth/presentation/widgets/auth_text_field.dart';
@@ -85,25 +86,13 @@ class _EditCarPageState extends State<EditCarPage> {
       listener: (context, state) {
         if (state is GarageLoaded && _isLoading) {
           setState(() => _isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Изменения сохранены'),
-              backgroundColor: AppColors.primary,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: 'Изменения сохранены', type: SnackBarType.success);
           context.pop();
         } else if (state is GarageError && _isLoading) {
           setState(() => _isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-            ),
-          );
+          AppSnackBar.show(context,
+              message: state.message, type: SnackBarType.error);
         }
       },
       child: PopScope(
@@ -139,13 +128,10 @@ class _EditCarPageState extends State<EditCarPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 8.h),
-
         _buildPhotoSection(),
         SizedBox(height: 24.h),
-
         _buildSectionTitle('Основная информация'),
         SizedBox(height: 16.h),
-
         _buildSelectorField(
           label: 'Марка авто',
           value: _selectedBrand,
@@ -154,7 +140,6 @@ class _EditCarPageState extends State<EditCarPage> {
           onTap: _selectBrand,
         ),
         SizedBox(height: 16.h),
-
         _buildSelectorField(
           label: 'Модель',
           value: _selectedModel,
@@ -163,7 +148,6 @@ class _EditCarPageState extends State<EditCarPage> {
           onTap: _selectedBrand != null ? _selectModel : null,
         ),
         SizedBox(height: 16.h),
-
         _buildSelectorField(
           label: 'Год выпуска',
           value: _selectedYear?.toString(),
@@ -172,7 +156,6 @@ class _EditCarPageState extends State<EditCarPage> {
           onTap: _selectYear,
         ),
         SizedBox(height: 16.h),
-
         AuthTextField(
           controller: _licensePlateController,
           label: 'Гос. номер',
@@ -187,13 +170,10 @@ class _EditCarPageState extends State<EditCarPage> {
           },
         ),
         SizedBox(height: 16.h),
-
         _buildBodyTypeSelector(),
         SizedBox(height: 24.h),
-
         _buildSectionTitle('Характеристики'),
         SizedBox(height: 16.h),
-
         AuthTextField(
           controller: _mileageController,
           label: 'Пробег (км)',
@@ -204,10 +184,8 @@ class _EditCarPageState extends State<EditCarPage> {
           onChanged: (_) => _markChanged(),
         ),
         SizedBox(height: 16.h),
-
         _buildFuelTypeSelector(),
         SizedBox(height: 16.h),
-
         AuthTextField(
           controller: _engineVolumeController,
           label: 'Объём двигателя (л)',
@@ -218,13 +196,10 @@ class _EditCarPageState extends State<EditCarPage> {
           onChanged: (_) => _markChanged(),
         ),
         SizedBox(height: 16.h),
-
         _buildTransmissionSelector(),
         SizedBox(height: 24.h),
-
         _buildSectionTitle('Дополнительно'),
         SizedBox(height: 16.h),
-
         AuthTextField(
           controller: _vinController,
           label: 'VIN номер',
@@ -233,7 +208,6 @@ class _EditCarPageState extends State<EditCarPage> {
           onChanged: (_) => _markChanged(),
         ),
         SizedBox(height: 16.h),
-
         _buildDescriptionField(),
         SizedBox(height: 32.h),
       ],
@@ -285,8 +259,7 @@ class _EditCarPageState extends State<EditCarPage> {
                       Image.network(
                         currentCar.photoUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
-                            _buildPhotoPlaceholder(),
+                        errorBuilder: (_, __, ___) => _buildPhotoPlaceholder(),
                       )
                     else
                       _buildPhotoPlaceholder(),
@@ -298,15 +271,13 @@ class _EditCarPageState extends State<EditCarPage> {
                         children: [
                           if (hasPhoto)
                             GestureDetector(
-                              onTap: () =>
-                                  _showDeletePhotoDialog(context),
+                              onTap: () => _showDeletePhotoDialog(context),
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 12.w, vertical: 8.h),
                                 decoration: BoxDecoration(
                                   color: AppColors.error,
-                                  borderRadius:
-                                      BorderRadius.circular(10.r),
+                                  borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Icon(
                                   Icons.delete_outline_rounded,
@@ -323,20 +294,16 @@ class _EditCarPageState extends State<EditCarPage> {
                                   horizontal: 12.w, vertical: 8.h),
                               decoration: BoxDecoration(
                                 color: AppColors.primary,
-                                borderRadius:
-                                    BorderRadius.circular(10.r),
+                                borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(Icons.camera_alt_outlined,
-                                      color: Colors.white,
-                                      size: 16.sp),
+                                      color: Colors.white, size: 16.sp),
                                   SizedBox(width: 6.w),
                                   Text(
-                                    hasPhoto
-                                        ? 'Изменить'
-                                        : 'Добавить фото',
+                                    hasPhoto ? 'Изменить' : 'Добавить фото',
                                     style: TextStyle(
                                       fontSize: 13.sp,
                                       fontWeight: FontWeight.w600,
@@ -361,10 +328,11 @@ class _EditCarPageState extends State<EditCarPage> {
   }
 
   Widget _buildPhotoPlaceholder() {
-    return Image.asset(
-      _selectedBodyType.imagePath,
-      fit: BoxFit.cover,
-      width: double.infinity,
+    return Center(
+      child: Image.asset(
+        _selectedBodyType.imagePath,
+        fit: BoxFit.contain,
+      ),
     );
   }
 
@@ -455,7 +423,9 @@ class _EditCarPageState extends State<EditCarPage> {
                     right: type != BodyType.values.last ? 8.w : 0,
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : AppColors.inputBackground,
+                    color: isSelected
+                        ? AppColors.primary
+                        : AppColors.inputBackground,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Center(
@@ -464,7 +434,9 @@ class _EditCarPageState extends State<EditCarPage> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
-                        color: isSelected ? Colors.white : AppColors.textPrimaryLight,
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.textPrimaryLight,
                       ),
                     ),
                   ),
@@ -599,7 +571,9 @@ class _EditCarPageState extends State<EditCarPage> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary : AppColors.inputBackground,
+                  color: isSelected
+                      ? AppColors.primary
+                      : AppColors.inputBackground,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Text(
@@ -607,7 +581,8 @@ class _EditCarPageState extends State<EditCarPage> {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: isSelected ? Colors.white : AppColors.textPrimaryLight,
+                    color:
+                        isSelected ? Colors.white : AppColors.textPrimaryLight,
                   ),
                 ),
               ),
@@ -644,7 +619,9 @@ class _EditCarPageState extends State<EditCarPage> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary : AppColors.inputBackground,
+                  color: isSelected
+                      ? AppColors.primary
+                      : AppColors.inputBackground,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Text(
@@ -652,7 +629,8 @@ class _EditCarPageState extends State<EditCarPage> {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: isSelected ? Colors.white : AppColors.textPrimaryLight,
+                    color:
+                        isSelected ? Colors.white : AppColors.textPrimaryLight,
                   ),
                 ),
               ),
@@ -778,12 +756,14 @@ class _EditCarPageState extends State<EditCarPage> {
 
     setState(() => _isLoading = true);
 
-    final mileage = int.tryParse(_mileageController.text.trim()) ?? widget.car.mileage;
+    final mileage =
+        int.tryParse(_mileageController.text.trim()) ?? widget.car.mileage;
     final engineVolume = double.tryParse(_engineVolumeController.text.trim());
 
     final garageState = context.read<GarageBloc>().state;
     final currentCar = garageState is GarageLoaded
-        ? garageState.cars.where((c) => c.id == widget.car.id).firstOrNull ?? widget.car
+        ? garageState.cars.where((c) => c.id == widget.car.id).firstOrNull ??
+            widget.car
         : widget.car;
 
     final updatedCar = currentCar.copyWith(
@@ -822,7 +802,8 @@ class _EditCarPageState extends State<EditCarPage> {
         ),
         content: Text(
           'Несохранённые изменения будут потеряны.',
-          style: TextStyle(fontSize: 14.sp, color: AppColors.textSecondaryLight),
+          style:
+              TextStyle(fontSize: 14.sp, color: AppColors.textSecondaryLight),
         ),
         actions: [
           TextButton(

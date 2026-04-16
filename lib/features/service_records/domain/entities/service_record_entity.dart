@@ -1,27 +1,26 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
-/// Категория обслуживания
 enum ServiceCategory {
-  maintenance('Плановое ТО', '🔧'),
-  repair('Ремонт', '🛠'),
-  tires('Шины', '🛞'),
-  bodywork('Кузовные работы', '🚗'),
-  electrical('Электрика', '⚡'),
-  oil('Масло и жидкости', '🛢'),
-  brakes('Тормоза', '🛑'),
-  suspension('Подвеска', '🔩'),
-  fuel('Заправка', '⛽'),
-  wash('Мойка', '🧼'),
-  insurance('Страховка', '📋'),
-  tax('Налог', '💰'),
-  other('Прочее', '📝');
+  maintenance('Плановое ТО', Icons.build_outlined),
+  repair('Ремонт', Icons.handyman_outlined),
+  tires('Шины', Icons.tire_repair_outlined),
+  bodywork('Кузовные работы', Icons.directions_car_outlined),
+  electrical('Электрика', Icons.bolt_outlined),
+  oil('Масло и жидкости', Icons.oil_barrel_outlined),
+  brakes('Тормоза', Icons.do_not_disturb_on_outlined),
+  suspension('Подвеска', Icons.settings_outlined),
+  fuel('Заправка', Icons.local_gas_station_outlined),
+  wash('Мойка', Icons.local_car_wash_outlined),
+  insurance('Страховка', Icons.assignment_outlined),
+  tax('Налог', Icons.payments_outlined),
+  other('Прочее', Icons.edit_note_outlined);
 
   final String label;
-  final String icon;
+  final IconData icon;
   const ServiceCategory(this.label, this.icon);
 }
 
-/// Сущность записи о ТО
 class ServiceRecordEntity extends Equatable {
   final String id;
   final String carId;
@@ -53,10 +52,8 @@ class ServiceRecordEntity extends Equatable {
     required this.updatedAt,
   });
 
-  /// Есть ли фотографии
   bool get hasPhotos => photoUrls.isNotEmpty;
 
-  /// Количество фотографий
   int get photosCount => photoUrls.length;
 
   @override

@@ -366,9 +366,10 @@ class _StatisticsPageState extends State<StatisticsPage>
               ),
               child: Row(
                 children: [
-                  Text(
-                    '🔧',
-                    style: TextStyle(fontSize: 16.sp),
+                  Icon(
+                    Icons.build_rounded,
+                    size: 16.sp,
+                    color: Colors.white.withValues(alpha: 0.85),
                   ),
                   SizedBox(width: 8.w),
                   Expanded(
@@ -421,9 +422,10 @@ class _StatisticsPageState extends State<StatisticsPage>
             ),
             child: Row(
               children: [
-                Text(
-                  _categoryEmoji(entry.key),
-                  style: TextStyle(fontSize: 20.sp),
+                Icon(
+                  _categoryIcon(entry.key),
+                  size: 20.sp,
+                  color: AppColors.textSecondaryLight,
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
@@ -514,9 +516,10 @@ class _StatisticsPageState extends State<StatisticsPage>
               ),
               child: Row(
                 children: [
-                  Text(
+                  Icon(
                     entry.key.icon,
-                    style: TextStyle(fontSize: 20.sp),
+                    size: 20.sp,
+                    color: AppColors.textSecondaryLight,
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
@@ -614,9 +617,10 @@ class _StatisticsPageState extends State<StatisticsPage>
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                     child: Center(
-                      child: Text(
-                        _categoryEmoji(expense.category),
-                        style: TextStyle(fontSize: 18.sp),
+                      child: Icon(
+                        _categoryIcon(expense.category),
+                        size: 18.sp,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
@@ -667,18 +671,18 @@ class _StatisticsPageState extends State<StatisticsPage>
     return text[0].toUpperCase() + text.substring(1);
   }
 
-  String _categoryEmoji(ExpenseCategory category) {
+  IconData _categoryIcon(ExpenseCategory category) {
     return switch (category) {
-      ExpenseCategory.fuel => '⛽',
-      ExpenseCategory.parking => '🅿️',
-      ExpenseCategory.fines => '🚦',
-      ExpenseCategory.tollRoad => '🛣',
-      ExpenseCategory.wash => '💧',
-      ExpenseCategory.carCare => '🧽',
-      ExpenseCategory.accessories => '🔧',
-      ExpenseCategory.taxes => '🏛',
-      ExpenseCategory.insurance => '📋',
-      ExpenseCategory.other => '📝',
+      ExpenseCategory.fuel => Icons.local_gas_station_rounded,
+      ExpenseCategory.parking => Icons.local_parking_rounded,
+      ExpenseCategory.fines => Icons.traffic_rounded,
+      ExpenseCategory.tollRoad => Icons.toll_rounded,
+      ExpenseCategory.wash => Icons.water_drop_rounded,
+      ExpenseCategory.carCare => Icons.cleaning_services_rounded,
+      ExpenseCategory.accessories => Icons.build_rounded,
+      ExpenseCategory.taxes => Icons.account_balance_rounded,
+      ExpenseCategory.insurance => Icons.description_rounded,
+      ExpenseCategory.other => Icons.edit_note_rounded,
     };
   }
 

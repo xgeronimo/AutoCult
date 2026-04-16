@@ -4,7 +4,6 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/user_entity.dart';
 import '../repositories/auth_repository.dart';
 
-/// Use Case для получения текущего пользователя
 class GetCurrentUserUseCase implements UseCase<UserEntity?, NoParams> {
   final AuthRepository repository;
 

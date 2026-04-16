@@ -9,7 +9,8 @@ abstract class PersonalDocumentRemoteDataSource {
   Future<void> deleteDocument(String documentId);
 }
 
-class PersonalDocumentRemoteDataSourceImpl implements PersonalDocumentRemoteDataSource {
+class PersonalDocumentRemoteDataSourceImpl
+    implements PersonalDocumentRemoteDataSource {
   final FirebaseFirestore _firestore;
 
   PersonalDocumentRemoteDataSourceImpl({required FirebaseFirestore firestore})
@@ -21,9 +22,8 @@ class PersonalDocumentRemoteDataSourceImpl implements PersonalDocumentRemoteData
   @override
   Future<List<PersonalDocumentModel>> getDocuments(String userId) async {
     try {
-      final snapshot = await _collection
-          .where('userId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _collection.where('userId', isEqualTo: userId).get();
 
       final docs = snapshot.docs
           .map((doc) => PersonalDocumentModel.fromJson(doc.data()))
@@ -37,7 +37,8 @@ class PersonalDocumentRemoteDataSourceImpl implements PersonalDocumentRemoteData
   }
 
   @override
-  Future<PersonalDocumentModel> addDocument(PersonalDocumentModel document) async {
+  Future<PersonalDocumentModel> addDocument(
+      PersonalDocumentModel document) async {
     try {
       final docRef = _collection.doc(document.id);
       await docRef.set(document.toJson());

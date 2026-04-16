@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/photo_viewer_page.dart';
 import '../../../../core/widgets/success_dialog.dart';
@@ -86,12 +87,8 @@ class _EditServiceRecordPageState extends State<EditServiceRecordPage> {
             );
           } else if (state is ServiceRecordsError) {
             setState(() => _isLoading = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppSnackBar.show(context,
+                message: state.message, type: SnackBarType.error);
           }
         },
         child: Scaffold(
@@ -469,8 +466,8 @@ class _EditServiceRecordPageState extends State<EditServiceRecordPage> {
                   (entry) => _buildNetworkPhotoThumbnail(
                     entry.value,
                     index: entry.key,
-                    onRemove: () => setState(
-                        () => _existingPhotoUrls.removeAt(entry.key)),
+                    onRemove: () =>
+                        setState(() => _existingPhotoUrls.removeAt(entry.key)),
                   ),
                 ),
             ..._newPhotoPaths.asMap().entries.map(
@@ -738,9 +735,10 @@ class _CategorySelector extends StatelessWidget {
                 final isSelected = category == selectedCategory;
 
                 return ListTile(
-                  leading: Text(
+                  leading: Icon(
                     category.icon,
-                    style: TextStyle(fontSize: 24.sp),
+                    size: 24.sp,
+                    color: AppColors.textSecondaryLight,
                   ),
                   title: Text(
                     category.label,

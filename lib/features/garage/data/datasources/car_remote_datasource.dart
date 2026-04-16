@@ -4,31 +4,22 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../models/car_model.dart';
 
-/// Интерфейс удалённого источника данных автомобилей
 abstract class CarRemoteDataSource {
-  /// Получить все автомобили пользователя
   Future<List<CarModel>> getCars(String userId);
 
-  /// Получить автомобиль по ID
   Future<CarModel> getCarById(String carId);
 
-  /// Добавить автомобиль
   Future<CarModel> addCar(CarModel car);
 
-  /// Обновить автомобиль
   Future<CarModel> updateCar(CarModel car);
 
-  /// Удалить автомобиль
   Future<void> deleteCar(String carId);
 
-  /// Обновить пробег
   Future<CarModel> updateMileage(String carId, int mileage);
 
-  /// Поток автомобилей пользователя
   Stream<List<CarModel>> watchCars(String userId);
 }
 
-/// Реализация удалённого источника данных автомобилей (Firebase)
 class CarRemoteDataSourceImpl implements CarRemoteDataSource {
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
@@ -45,15 +36,12 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
   @override
   Future<List<CarModel>> getCars(String userId) async {
     try {
-      final snapshot = await _carsCollection
-          .where('userId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _carsCollection.where('userId', isEqualTo: userId).get();
 
-      final cars = snapshot.docs
-          .map((doc) => CarModel.fromJson(doc.data()))
-          .toList();
+      final cars =
+          snapshot.docs.map((doc) => CarModel.fromJson(doc.data())).toList();
 
-      // Сортируем на клиенте, чтобы избежать необходимости в composite index
       cars.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       return cars;
@@ -105,7 +93,6 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
     try {
       final photoUrlsToDelete = <String>[];
 
-      // Собираем фото автомобиля
       final carDoc = await _carsCollection.doc(carId).get();
       if (carDoc.exists) {
         final carPhotoUrl = carDoc.data()?['photoUrl'] as String?;
@@ -114,7 +101,6 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
         }
       }
 
-      // Собираем фото из записей ТО и удаляем записи
       final serviceRecords = await _firestore
           .collection(FirestoreCollections.serviceRecords)
           .where('carId', isEqualTo: carId)
@@ -129,7 +115,6 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
         }
       }
 
-      // Собираем фото из документов и удаляем документы
       final documents = await _firestore
           .collection(FirestoreCollections.documents)
           .where('carId', isEqualTo: carId)
@@ -141,19 +126,16 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
         }
       }
 
-      // Удаляем расходы
       final expenses = await _firestore
           .collection(FirestoreCollections.expenses)
           .where('carId', isEqualTo: carId)
           .get();
 
-      // Удаляем напоминания, привязанные к автомобилю
       final reminders = await _firestore
           .collection(FirestoreCollections.reminders)
           .where('carId', isEqualTo: carId)
           .get();
 
-      // Пакетное удаление всех документов из Firestore
       final batch = _firestore.batch();
       for (final doc in serviceRecords.docs) {
         batch.delete(doc.reference);
@@ -170,13 +152,10 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
       batch.delete(_carsCollection.doc(carId));
       await batch.commit();
 
-      // Удаляем фото из Firebase Storage
       for (final url in photoUrlsToDelete) {
         try {
           await _storage.refFromURL(url).delete();
-        } on FirebaseException {
-          // Файл мог быть уже удалён
-        }
+        } on FirebaseException catch (_) {}
       }
     } catch (e) {
       throw ServerException(message: e.toString());
@@ -203,12 +182,10 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
         .where('userId', isEqualTo: userId)
         .snapshots()
         .map((snapshot) {
-          final cars = snapshot.docs
-              .map((doc) => CarModel.fromJson(doc.data()))
-              .toList();
-          // Сортируем на клиенте
-          cars.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          return cars;
-        });
+      final cars =
+          snapshot.docs.map((doc) => CarModel.fromJson(doc.data())).toList();
+      cars.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return cars;
+    });
   }
 }

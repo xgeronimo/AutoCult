@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Категория расходов
 enum ExpenseCategory {
   fuel('Топливо', 'fuel'),
   parking('Парковка', 'parking'),
@@ -18,7 +17,6 @@ enum ExpenseCategory {
   const ExpenseCategory(this.label, this.iconKey);
 }
 
-/// Сущность расхода
 class ExpenseEntity extends Equatable {
   final String id;
   final String carId;
@@ -42,7 +40,6 @@ class ExpenseEntity extends Equatable {
     required this.updatedAt,
   });
 
-  /// Форматированная сумма
   String get formattedAmount => '${amount.toStringAsFixed(0)} руб.';
 
   @override

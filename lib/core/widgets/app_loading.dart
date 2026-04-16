@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../theme/app_colors.dart';
 
-/// Индикатор загрузки
 class AppLoading extends StatelessWidget {
   final double size;
   final Color? color;
@@ -32,7 +31,6 @@ class AppLoading extends StatelessWidget {
   }
 }
 
-/// Полноэкранный индикатор загрузки
 class AppLoadingOverlay extends StatelessWidget {
   final bool isLoading;
   final Widget child;
@@ -84,7 +82,6 @@ class AppLoadingOverlay extends StatelessWidget {
   }
 }
 
-/// Shimmer эффект для загрузки
 class AppShimmer extends StatelessWidget {
   final double width;
   final double height;

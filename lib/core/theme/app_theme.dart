@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app_colors.dart';
 
-/// Тема приложения AutoCult
 class AppTheme {
   AppTheme._();
 
-  /// Светлая тема
   static ThemeData get light => ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
-        
-        // Цветовая схема
         colorScheme: const ColorScheme.light(
           primary: AppColors.primary,
           onPrimary: Colors.white,
@@ -26,11 +22,7 @@ class AppTheme {
           error: AppColors.error,
           onError: Colors.white,
         ),
-        
-        // Скаффолд
         scaffoldBackgroundColor: AppColors.backgroundLight,
-        
-        // AppBar
         appBarTheme: const AppBarTheme(
           elevation: 0,
           centerTitle: false,
@@ -43,8 +35,6 @@ class AppTheme {
             statusBarBrightness: Brightness.light,
           ),
         ),
-        
-        // Карточки
         cardTheme: CardTheme(
           elevation: 0,
           color: AppColors.cardLight,
@@ -53,8 +43,6 @@ class AppTheme {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        
-        // Elevated Button (по дизайну: высота 41px, radius 12px)
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             elevation: 0,
@@ -72,8 +60,6 @@ class AppTheme {
             ),
           ),
         ),
-        
-        // Outlined Button (по дизайну: серая #969696, высота 41px, radius 12px)
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             elevation: 0,
@@ -90,7 +76,6 @@ class AppTheme {
             ),
           ),
         ),
-        
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             foregroundColor: AppColors.primary,
@@ -100,12 +85,11 @@ class AppTheme {
             ),
           ),
         ),
-        
-        // Поля ввода (по дизайну: radius 10px, высота 51px)
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: AppColors.inputBackground,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,
@@ -116,15 +100,18 @@ class AppTheme {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.inputBorderFocused, width: 1.5),
+            borderSide: const BorderSide(
+                color: AppColors.inputBorderFocused, width: 1.5),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.inputBorderError, width: 1.5),
+            borderSide:
+                const BorderSide(color: AppColors.inputBorderError, width: 1.5),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.inputBorderError, width: 1.5),
+            borderSide:
+                const BorderSide(color: AppColors.inputBorderError, width: 1.5),
           ),
           hintStyle: const TextStyle(
             color: AppColors.textHint,
@@ -141,8 +128,6 @@ class AppTheme {
             fontWeight: FontWeight.w600,
           ),
         ),
-        
-        // Нижняя навигация
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           elevation: 8,
           backgroundColor: AppColors.surfaceLight,
@@ -150,17 +135,14 @@ class AppTheme {
           unselectedItemColor: AppColors.textSecondaryLight,
           type: BottomNavigationBarType.fixed,
           showUnselectedLabels: true,
-          selectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          selectedLabelStyle:
+              TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           unselectedLabelStyle: TextStyle(fontSize: 12),
         ),
-        
-        // Divider
         dividerTheme: const DividerThemeData(
           color: AppColors.divider,
           thickness: 1,
         ),
-        
-        // SnackBar
         snackBarTheme: SnackBarThemeData(
           behavior: SnackBarBehavior.floating,
           backgroundColor: AppColors.textPrimaryLight,
@@ -168,16 +150,12 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        
-        // BottomSheet
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: AppColors.surfaceLight,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
         ),
-        
-        // Dialog
         dialogTheme: DialogTheme(
           backgroundColor: AppColors.surfaceLight,
           shape: RoundedRectangleBorder(
@@ -186,12 +164,9 @@ class AppTheme {
         ),
       );
 
-  /// Тёмная тема
   static ThemeData get dark => ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
-        
-        // Цветовая схема
         colorScheme: const ColorScheme.dark(
           primary: AppColors.primaryLight,
           onPrimary: Colors.white,
@@ -206,11 +181,7 @@ class AppTheme {
           error: AppColors.error,
           onError: Colors.white,
         ),
-        
-        // Скаффолд
         scaffoldBackgroundColor: AppColors.backgroundDark,
-        
-        // AppBar
         appBarTheme: const AppBarTheme(
           elevation: 0,
           centerTitle: false,
@@ -223,8 +194,6 @@ class AppTheme {
             statusBarBrightness: Brightness.dark,
           ),
         ),
-        
-        // Карточки
         cardTheme: CardTheme(
           elevation: 0,
           color: AppColors.cardDark,
@@ -233,8 +202,6 @@ class AppTheme {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        
-        // Elevated Button
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             elevation: 0,
@@ -252,8 +219,6 @@ class AppTheme {
             ),
           ),
         ),
-        
-        // Outlined Button
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             elevation: 0,
@@ -270,7 +235,6 @@ class AppTheme {
             ),
           ),
         ),
-        
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             foregroundColor: AppColors.primaryLight,
@@ -280,12 +244,11 @@ class AppTheme {
             ),
           ),
         ),
-        
-        // Поля ввода
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: AppColors.cardDark,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -296,7 +259,8 @@ class AppTheme {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.primaryLight, width: 1.5),
+            borderSide:
+                const BorderSide(color: AppColors.primaryLight, width: 1.5),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -320,8 +284,6 @@ class AppTheme {
             fontWeight: FontWeight.w500,
           ),
         ),
-        
-        // Нижняя навигация
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           elevation: 8,
           backgroundColor: AppColors.surfaceDark,
@@ -329,17 +291,14 @@ class AppTheme {
           unselectedItemColor: AppColors.textSecondaryDark,
           type: BottomNavigationBarType.fixed,
           showUnselectedLabels: true,
-          selectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          selectedLabelStyle:
+              TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           unselectedLabelStyle: TextStyle(fontSize: 12),
         ),
-        
-        // Divider
         dividerTheme: const DividerThemeData(
           color: AppColors.dividerDark,
           thickness: 1,
         ),
-        
-        // SnackBar
         snackBarTheme: SnackBarThemeData(
           behavior: SnackBarBehavior.floating,
           backgroundColor: AppColors.cardDark,
@@ -347,16 +306,12 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        
-        // BottomSheet
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: AppColors.surfaceDark,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
         ),
-        
-        // Dialog
         dialogTheme: DialogTheme(
           backgroundColor: AppColors.surfaceDark,
           shape: RoundedRectangleBorder(

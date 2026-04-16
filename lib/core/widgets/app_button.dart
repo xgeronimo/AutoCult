@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../theme/app_colors.dart';
 
-/// Типы кнопок
 enum AppButtonType { primary, secondary, outline, text }
 
-/// Размеры кнопок
 enum AppButtonSize { small, medium, large }
 
-/// Универсальная кнопка приложения
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -46,7 +43,9 @@ class AppButton extends StatelessWidget {
             child: CircularProgressIndicator(
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(
-                type == AppButtonType.primary ? Colors.white : AppColors.primary,
+                type == AppButtonType.primary
+                    ? Colors.white
+                    : AppColors.primary,
               ),
             ),
           )
@@ -97,7 +96,8 @@ class AppButton extends StatelessWidget {
               padding: padding,
               backgroundColor: AppColors.secondary,
               foregroundColor: Colors.white,
-              disabledBackgroundColor: AppColors.secondary.withValues(alpha: 0.5),
+              disabledBackgroundColor:
+                  AppColors.secondary.withValues(alpha: 0.5),
             ),
             child: child,
           ),

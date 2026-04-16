@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../domain/entities/reminder_entity.dart';
@@ -50,28 +52,12 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
     return BlocListener<NotificationsBloc, NotificationsState>(
       listener: (context, state) {
         if (state is NotificationsCreateSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Напоминание создано'),
-              backgroundColor: AppColors.primary,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: 'Напоминание создано', type: SnackBarType.success);
           context.pop();
         } else if (state is NotificationsError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: state.message, type: SnackBarType.error);
         }
       },
       child: Scaffold(
@@ -174,16 +160,14 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
               onTap: () => setState(() => _selectedType = type),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding:
-                    EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primary.withValues(alpha: 0.1)
                       : AppColors.inputBackground,
                   borderRadius: BorderRadius.circular(10.r),
                   border: Border.all(
-                    color:
-                        isSelected ? AppColors.primary : Colors.transparent,
+                    color: isSelected ? AppColors.primary : Colors.transparent,
                     width: 1.5,
                   ),
                 ),
@@ -439,24 +423,170 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
     }
   }
 
-  Future<void> _pickTime() async {
-    final picked = await showTimePicker(
+  void _pickTime() {
+    int tempHour = _selectedTime.hour;
+    int tempMinute = _selectedTime.minute;
+
+    final hourController = FixedExtentScrollController(initialItem: tempHour);
+    final minuteController =
+        FixedExtentScrollController(initialItem: tempMinute);
+
+    showModalBottomSheet(
       context: context,
-      initialTime: _selectedTime,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: AppColors.primary,
-                ),
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
           ),
-          child: child!,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 8.h),
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: AppColors.divider,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Text(
+                        'Отмена',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondaryLight,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Время',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimaryLight,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedTime = TimeOfDay(
+                            hour: tempHour,
+                            minute: tempMinute,
+                          );
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Готово',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 1, color: AppColors.divider),
+              SizedBox(
+                height: 220.h,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 200.w,
+                      height: 52.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(14.r),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.25),
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 80.w,
+                          child: CupertinoPicker(
+                            scrollController: hourController,
+                            itemExtent: 50.h,
+                            magnification: 1.15,
+                            squeeze: 1.1,
+                            useMagnifier: true,
+                            selectionOverlay: const SizedBox.shrink(),
+                            onSelectedItemChanged: (index) => tempHour = index,
+                            children: List.generate(24, (index) {
+                              return Center(
+                                child: Text(
+                                  index.toString().padLeft(2, '0'),
+                                  style: TextStyle(
+                                    fontSize: 26.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimaryLight,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                        Text(
+                          ':',
+                          style: TextStyle(
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimaryLight,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 80.w,
+                          child: CupertinoPicker(
+                            scrollController: minuteController,
+                            itemExtent: 50.h,
+                            magnification: 1.15,
+                            squeeze: 1.1,
+                            useMagnifier: true,
+                            selectionOverlay: const SizedBox.shrink(),
+                            onSelectedItemChanged: (index) =>
+                                tempMinute = index,
+                            children: List.generate(60, (index) {
+                              return Center(
+                                child: Text(
+                                  index.toString().padLeft(2, '0'),
+                                  style: TextStyle(
+                                    fontSize: 26.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimaryLight,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).padding.bottom + 16.h),
+            ],
+          ),
         );
       },
     );
-    if (picked != null) {
-      setState(() => _selectedTime = picked);
-    }
   }
 
   Widget _buildCreateButton() {
@@ -472,8 +602,7 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
-              disabledBackgroundColor:
-                  AppColors.primary.withValues(alpha: 0.5),
+              disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
@@ -504,16 +633,8 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
     if (!_formKey.currentState!.validate()) return;
 
     if (_scheduledDateTime.isBefore(DateTime.now())) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Выберите будущую дату и время'),
-          backgroundColor: AppColors.error,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-        ),
-      );
+      AppSnackBar.show(context,
+          message: 'Выберите будущую дату и время', type: SnackBarType.error);
       return;
     }
 

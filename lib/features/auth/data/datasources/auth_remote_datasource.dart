@@ -4,50 +4,39 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../models/user_model.dart';
 
-/// Интерфейс удалённого источника данных авторизации
 abstract class AuthRemoteDataSource {
-  /// Текущий пользователь
   Future<UserModel?> getCurrentUser();
 
-  /// Вход по email и паролю
   Future<UserModel> signInWithEmail({
     required String email,
     required String password,
   });
 
-  /// Регистрация по email и паролю
   Future<UserModel> signUpWithEmail({
     required String email,
     required String password,
     String? displayName,
   });
 
-  /// Выход
   Future<void> signOut();
 
-  /// Сброс пароля
   Future<void> resetPassword({required String email});
 
-  /// Обновление профиля
   Future<UserModel> updateProfile({
     String? displayName,
     String? photoUrl,
   });
 
-  /// Смена пароля
   Future<void> changePassword({
     required String currentPassword,
     required String newPassword,
   });
 
-  /// Удаление аккаунта
   Future<void> deleteAccount({required String password});
 
-  /// Поток состояния авторизации
   Stream<UserModel?> get authStateChanges;
 }
 
-/// Реализация удалённого источника данных авторизации (Firebase)
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
@@ -72,7 +61,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return UserModel.fromJson(doc.data()!);
       }
 
-      // Если документ не существует, создаём его
       return _createUserDocument(user);
     } catch (e) {
       throw ServerException(message: e.toString());
@@ -91,7 +79,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       final user = credential.user!;
 
-      // Обновляем lastLoginAt
       final userModel = await _updateLastLogin(user.uid);
       return userModel;
     } on FirebaseAuthException catch (e) {
@@ -114,12 +101,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       final user = credential.user!;
 
-      // Обновляем displayName в FirebaseAuth
       if (displayName != null) {
         await user.updateDisplayName(displayName);
       }
 
-      // Создаём документ пользователя
       return _createUserDocument(user, displayName: displayName);
     } on FirebaseAuthException catch (e) {
       throw AuthException(message: _mapFirebaseAuthError(e.code));
@@ -159,7 +144,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw const AuthException(message: 'Пользователь не авторизован');
       }
 
-      // Обновляем в FirebaseAuth
       if (displayName != null) {
         await user.updateDisplayName(displayName);
       }
@@ -167,7 +151,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await user.updatePhotoURL(photoUrl);
       }
 
-      // Обновляем в Firestore
       final updates = <String, dynamic>{};
       if (displayName != null) updates['displayName'] = displayName;
       if (photoUrl != null) updates['photoUrl'] = photoUrl;
@@ -246,8 +229,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     });
   }
 
-  /// Создание документа пользователя в Firestore
-  Future<UserModel> _createUserDocument(User user, {String? displayName}) async {
+  Future<UserModel> _createUserDocument(User user,
+      {String? displayName}) async {
     final userModel = UserModel(
       id: user.uid,
       email: user.email!,
@@ -261,7 +244,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     return userModel;
   }
 
-  /// Обновление lastLoginAt
   Future<UserModel> _updateLastLogin(String uid) async {
     await _usersCollection.doc(uid).update({
       'lastLoginAt': DateTime.now().toIso8601String(),
@@ -271,7 +253,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     return UserModel.fromJson(doc.data()!);
   }
 
-  /// Маппинг ошибок Firebase Auth
   String _mapFirebaseAuthError(String code) {
     switch (code) {
       case 'user-not-found':

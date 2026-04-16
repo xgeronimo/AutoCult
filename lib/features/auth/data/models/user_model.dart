@@ -1,6 +1,5 @@
 import '../../domain/entities/user_entity.dart';
 
-/// Модель пользователя для работы с Firebase
 class UserModel extends UserEntity {
   const UserModel({
     required super.id,
@@ -11,7 +10,6 @@ class UserModel extends UserEntity {
     super.lastLoginAt,
   });
 
-  /// Создание из JSON (Firestore)
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as String,
@@ -25,7 +23,6 @@ class UserModel extends UserEntity {
     );
   }
 
-  /// Преобразование в JSON (Firestore)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -37,7 +34,6 @@ class UserModel extends UserEntity {
     };
   }
 
-  /// Создание из UserEntity
   factory UserModel.fromEntity(UserEntity entity) {
     return UserModel(
       id: entity.id,
@@ -49,7 +45,6 @@ class UserModel extends UserEntity {
     );
   }
 
-  /// Копирование с изменениями
   UserModel copyWith({
     String? id,
     String? email,

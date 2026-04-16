@@ -1,6 +1,5 @@
 import '../../domain/entities/car_entity.dart';
 
-/// Модель автомобиля для работы с Firebase
 class CarModel extends CarEntity {
   const CarModel({
     required super.id,
@@ -23,7 +22,6 @@ class CarModel extends CarEntity {
     required super.updatedAt,
   });
 
-  /// Создание из JSON (Firestore)
   factory CarModel.fromJson(Map<String, dynamic> json) {
     return CarModel(
       id: json['id'] as String,
@@ -60,7 +58,6 @@ class CarModel extends CarEntity {
     );
   }
 
-  /// Преобразование в JSON (Firestore)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -84,7 +81,6 @@ class CarModel extends CarEntity {
     };
   }
 
-  /// Создание из CarEntity
   factory CarModel.fromEntity(CarEntity entity) {
     return CarModel(
       id: entity.id,

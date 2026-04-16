@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
-/// Селектор года выпуска
 class YearSelector extends StatelessWidget {
   const YearSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
     final currentYear = DateTime.now().year;
-    final years = List.generate(currentYear - 1970 + 1, (index) => currentYear - index);
+    final years =
+        List.generate(currentYear - 1970 + 1, (index) => currentYear - index);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
@@ -22,7 +22,6 @@ class YearSelector extends StatelessWidget {
           padding: EdgeInsets.all(24.w),
           child: Column(
             children: [
-              // Handle
               Container(
                 width: 40.w,
                 height: 4.h,
@@ -32,8 +31,6 @@ class YearSelector extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 24.h),
-
-              // Заголовок
               Text(
                 'Выберите год выпуска',
                 style: TextStyle(
@@ -43,8 +40,6 @@ class YearSelector extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16.h),
-
-              // Список годов
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,

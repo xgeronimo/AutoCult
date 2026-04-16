@@ -13,7 +13,6 @@ import '../../domain/usecases/reset_password_usecase.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
-/// BLoC для управления авторизацией
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInUseCase signInUseCase;
   final SignUpUseCase signUpUseCase;
@@ -39,7 +38,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthResetPasswordRequested>(_onResetPasswordRequested);
     on<AuthStateChanged>(_onAuthStateChanged);
 
-    // Подписываемся на изменения состояния авторизации
     _authStateSubscription = authRepository.authStateChanges.listen(
       (user) => add(AuthStateChanged(user)),
     );

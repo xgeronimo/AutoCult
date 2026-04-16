@@ -46,8 +46,6 @@ class ImagePickerService {
     return file.path;
   }
 
-  /// Показывает bottom sheet для выбора источника (галерея/камера),
-  /// затем открывает выбранный источник и возвращает путь к файлу.
   Future<String?> showPickerSheet(BuildContext context) async {
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
@@ -118,8 +116,6 @@ class ImagePickerService {
 
     if (source == null) return null;
 
-    return source == ImageSource.gallery
-        ? pickFromGallery()
-        : pickFromCamera();
+    return source == ImageSource.gallery ? pickFromGallery() : pickFromCamera();
   }
 }

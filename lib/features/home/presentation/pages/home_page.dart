@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../app/router/app_router.dart';
 import '../../../garage/domain/entities/car_entity.dart';
@@ -254,9 +255,7 @@ class _HomePageState extends State<HomePage>
 
   void _navigateToAddExpense(ExpenseCategory category, List<CarEntity> cars) {
     if (cars.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Сначала добавьте автомобиль')),
-      );
+      AppSnackBar.show(context, message: 'Сначала добавьте автомобиль');
       return;
     }
     final currentCar =

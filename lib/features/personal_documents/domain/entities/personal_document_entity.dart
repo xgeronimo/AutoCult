@@ -34,5 +34,6 @@ class PersonalDocumentEntity extends Equatable {
   String get displayName => label ?? type.label;
 
   @override
-  List<Object?> get props => [id, userId, type, label, photoUrl, createdAt, updatedAt];
+  List<Object?> get props =>
+      [id, userId, type, label, photoUrl, createdAt, updatedAt];
 }

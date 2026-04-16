@@ -4,7 +4,6 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/car_entity.dart';
 import '../repositories/car_repository.dart';
 
-/// Use Case для добавления автомобиля
 class AddCarUseCase implements UseCase<CarEntity, CarEntity> {
   final CarRepository repository;
 

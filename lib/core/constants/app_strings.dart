@@ -1,8 +1,6 @@
-/// Строковые константы приложения (локализация)
 class AppStrings {
   AppStrings._();
 
-  // Общие
   static const String appName = 'AutoCult';
   static const String loading = 'Загрузка...';
   static const String error = 'Ошибка';
@@ -16,7 +14,6 @@ class AppStrings {
   static const String noData = 'Нет данных';
   static const String retry = 'Повторить';
 
-  // Авторизация
   static const String signIn = 'Войти';
   static const String signUp = 'Регистрация';
   static const String signOut = 'Выйти';
@@ -28,14 +25,12 @@ class AppStrings {
   static const String welcomeBack = 'С возвращением!';
   static const String createAccount = 'Создать аккаунт';
 
-  // Гараж
   static const String garage = 'Гараж';
   static const String myCars = 'Мои автомобили';
   static const String addCar = 'Добавить автомобиль';
   static const String noCars = 'У вас пока нет автомобилей';
   static const String addFirstCar = 'Добавьте свой первый автомобиль';
 
-  // Автомобиль
   static const String carDetails = 'Детали автомобиля';
   static const String brand = 'Марка';
   static const String model = 'Модель';
@@ -49,7 +44,6 @@ class AppStrings {
   static const String transmission = 'Коробка передач';
   static const String color = 'Цвет';
 
-  // Записи ТО
   static const String serviceRecords = 'Записи ТО';
   static const String serviceHistory = 'История обслуживания';
   static const String addServiceRecord = 'Добавить запись';
@@ -61,7 +55,6 @@ class AppStrings {
   static const String serviceNotes = 'Заметки';
   static const String noServiceRecords = 'Нет записей о ТО';
 
-  // Напоминания
   static const String reminders = 'Напоминания';
   static const String addReminder = 'Добавить напоминание';
   static const String reminderTitle = 'Название';
@@ -69,13 +62,11 @@ class AppStrings {
   static const String reminderMileage = 'При пробеге';
   static const String noReminders = 'Нет напоминаний';
 
-  // Статистика
   static const String statistics = 'Статистика';
   static const String totalExpenses = 'Общие расходы';
   static const String expensesByCategory = 'Расходы по категориям';
   static const String expensesByMonth = 'Расходы по месяцам';
 
-  // Профиль
   static const String profile = 'Профиль';
   static const String settings = 'Настройки';
   static const String notifications = 'Уведомления';
@@ -85,7 +76,6 @@ class AppStrings {
   static const String privacyPolicy = 'Политика конфиденциальности';
   static const String termsOfService = 'Условия использования';
 
-  // Ошибки
   static const String errorNetwork = 'Нет подключения к интернету';
   static const String errorServer = 'Ошибка сервера';
   static const String errorUnknown = 'Неизвестная ошибка';

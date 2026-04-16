@@ -22,9 +22,8 @@ class ExpenseRemoteDataSourceImpl implements ExpenseRemoteDataSource {
   @override
   Future<List<ExpenseModel>> getExpenses(String carId) async {
     try {
-      final snapshot = await _expensesCollection
-          .where('carId', isEqualTo: carId)
-          .get();
+      final snapshot =
+          await _expensesCollection.where('carId', isEqualTo: carId).get();
 
       final expenses = snapshot.docs
           .map((doc) => ExpenseModel.fromJson(doc.data()))
@@ -40,9 +39,8 @@ class ExpenseRemoteDataSourceImpl implements ExpenseRemoteDataSource {
   @override
   Future<List<ExpenseModel>> getExpensesByUserId(String userId) async {
     try {
-      final snapshot = await _expensesCollection
-          .where('userId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _expensesCollection.where('userId', isEqualTo: userId).get();
 
       final expenses = snapshot.docs
           .map((doc) => ExpenseModel.fromJson(doc.data()))

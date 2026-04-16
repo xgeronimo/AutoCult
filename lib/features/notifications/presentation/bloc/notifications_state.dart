@@ -20,25 +20,20 @@ class NotificationsLoaded extends NotificationsState {
 
   const NotificationsLoaded({required this.reminders});
 
-  /// Все непрочитанные (вкладка «Активные»)
-  List<ReminderEntity> get active =>
-      reminders.where((r) => !r.isRead).toList();
+  List<ReminderEntity> get active => reminders.where((r) => !r.isRead).toList();
 
-  /// Непрочитанные, срок которых уже наступил (сработавшие)
   List<ReminderEntity> get overdueUnread {
     final list = active.where((r) => r.isPast).toList();
     list.sort((a, b) => b.scheduledAt.compareTo(a.scheduledAt));
     return list;
   }
 
-  /// Непрочитанные предстоящие (ещё не наступили)
   List<ReminderEntity> get upcomingUnread {
     final list = active.where((r) => r.isUpcoming).toList();
     list.sort((a, b) => a.scheduledAt.compareTo(b.scheduledAt));
     return list;
   }
 
-  /// Прочитанные (вкладка «Прошедшие»)
   List<ReminderEntity> get readReminders {
     final list = reminders.where((r) => r.isRead).toList();
     list.sort((a, b) => b.scheduledAt.compareTo(a.scheduledAt));

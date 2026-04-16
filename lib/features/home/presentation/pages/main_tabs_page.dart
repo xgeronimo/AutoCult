@@ -46,7 +46,6 @@ class _MainTabsPageState extends State<MainTabsPage> {
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
-        onPageChanged: (index) => setState(() => _currentIndex = index),
         children: const [
           GaragePage(),
           HomePage(),
@@ -74,4 +73,3 @@ class _MainTabsPageState extends State<MainTabsPage> {
     );
   }
 }
-

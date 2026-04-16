@@ -1,6 +1,5 @@
 part of 'service_records_bloc.dart';
 
-/// Базовый класс событий для записей об обслуживании
 abstract class ServiceRecordsEvent extends Equatable {
   const ServiceRecordsEvent();
 
@@ -8,7 +7,6 @@ abstract class ServiceRecordsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Загрузить записи для автомобиля
 class ServiceRecordsLoadRequested extends ServiceRecordsEvent {
   final String carId;
 
@@ -18,7 +16,6 @@ class ServiceRecordsLoadRequested extends ServiceRecordsEvent {
   List<Object?> get props => [carId];
 }
 
-/// Добавить запись
 class ServiceRecordsAddRequested extends ServiceRecordsEvent {
   final String carId;
   final String userId;
@@ -45,10 +42,20 @@ class ServiceRecordsAddRequested extends ServiceRecordsEvent {
   });
 
   @override
-  List<Object?> get props => [carId, userId, title, category, mileage, date, cost, description, serviceStation, photoPaths];
+  List<Object?> get props => [
+        carId,
+        userId,
+        title,
+        category,
+        mileage,
+        date,
+        cost,
+        description,
+        serviceStation,
+        photoPaths
+      ];
 }
 
-/// Обновить запись
 class ServiceRecordsUpdateRequested extends ServiceRecordsEvent {
   final ServiceRecordEntity record;
   final List<String> newPhotoPaths;
@@ -62,7 +69,6 @@ class ServiceRecordsUpdateRequested extends ServiceRecordsEvent {
   List<Object?> get props => [record, newPhotoPaths];
 }
 
-/// Удалить запись
 class ServiceRecordsDeleteRequested extends ServiceRecordsEvent {
   final String recordId;
   final String carId;

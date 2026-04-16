@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../theme/app_colors.dart';
 import 'app_button.dart';
 
-/// Виджет пустого состояния
 class AppEmptyWidget extends StatelessWidget {
   final String title;
   final String? subtitle;

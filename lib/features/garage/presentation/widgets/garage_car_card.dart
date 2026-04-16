@@ -141,8 +141,7 @@ class GarageCarCard extends StatelessWidget {
         SizedBox(height: 8.h),
         if (car.licensePlate != null && car.licensePlate!.isNotEmpty)
           Container(
-            padding:
-                EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(6.r),

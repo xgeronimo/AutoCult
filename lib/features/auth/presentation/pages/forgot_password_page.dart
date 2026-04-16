@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/auth_text_field.dart';
@@ -49,21 +50,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           if (state is AuthError) {
             setState(() => _emailError = state.message);
           } else if (state is AuthPasswordResetSent) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
+            AppSnackBar.show(
+              context,
+              message:
                   'Письмо для восстановления пароля отправлено на ${state.email}',
-                ),
-                backgroundColor: AppColors.success,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                duration: const Duration(seconds: 4),
-              ),
+              type: SnackBarType.success,
             );
+            if (!context.mounted) return;
             Future.delayed(const Duration(seconds: 2), () {
-              if (mounted) context.pop();
+              if (!context.mounted) return;
+              context.pop();
             });
           }
         },
@@ -74,7 +70,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Back button
                 Padding(
                   padding: EdgeInsets.only(left: 20.w, top: 10.h),
                   child: GlassPillButton(
@@ -118,7 +113,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.done,
                     onChanged: (_) {
-                      if (_emailError != null) setState(() => _emailError = null);
+                      if (_emailError != null) {
+                        setState(() => _emailError = null);
+                      }
                     },
                     onSubmitted: (_) => _onResetPassword(),
                   ),

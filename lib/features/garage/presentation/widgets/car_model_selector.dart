@@ -71,16 +71,108 @@ class CarModelSelector extends StatelessWidget {
 
   List<String> _getModelsForBrand(String brand) {
     final models = <String, List<String>>{
-      'Audi': ['A1', 'A3', 'A3 Sportback', 'A4', 'A5', 'A6', 'A7', 'A8', 'Q3', 'Q5', 'Q7', 'Q8', 'TT', 'R8'],
-      'BMW': ['1 Series', '2 Series', '3 Series', '4 Series', '5 Series', '6 Series', '7 Series', '8 Series', 'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7'],
-      'Mercedes-Benz': ['A-Class', 'B-Class', 'C-Class', 'E-Class', 'S-Class', 'CLA', 'CLS', 'GLA', 'GLB', 'GLC', 'GLE', 'GLS'],
-      'Volkswagen': ['Golf', 'Passat', 'Tiguan', 'Touareg', 'Polo', 'Jetta', 'Arteon', 'ID.4', 'T-Roc', 'T-Cross'],
-      'Toyota': ['Camry', 'Corolla', 'RAV4', 'Land Cruiser', 'Prius', 'Yaris', 'Highlander', 'C-HR', 'Supra'],
+      'Audi': [
+        'A1',
+        'A3',
+        'A3 Sportback',
+        'A4',
+        'A5',
+        'A6',
+        'A7',
+        'A8',
+        'Q3',
+        'Q5',
+        'Q7',
+        'Q8',
+        'TT',
+        'R8'
+      ],
+      'BMW': [
+        '1 Series',
+        '2 Series',
+        '3 Series',
+        '4 Series',
+        '5 Series',
+        '6 Series',
+        '7 Series',
+        '8 Series',
+        'X1',
+        'X2',
+        'X3',
+        'X4',
+        'X5',
+        'X6',
+        'X7'
+      ],
+      'Mercedes-Benz': [
+        'A-Class',
+        'B-Class',
+        'C-Class',
+        'E-Class',
+        'S-Class',
+        'CLA',
+        'CLS',
+        'GLA',
+        'GLB',
+        'GLC',
+        'GLE',
+        'GLS'
+      ],
+      'Volkswagen': [
+        'Golf',
+        'Passat',
+        'Tiguan',
+        'Touareg',
+        'Polo',
+        'Jetta',
+        'Arteon',
+        'ID.4',
+        'T-Roc',
+        'T-Cross'
+      ],
+      'Toyota': [
+        'Camry',
+        'Corolla',
+        'RAV4',
+        'Land Cruiser',
+        'Prius',
+        'Yaris',
+        'Highlander',
+        'C-HR',
+        'Supra'
+      ],
       'Honda': ['Civic', 'Accord', 'CR-V', 'HR-V', 'Pilot', 'Fit', 'Odyssey'],
       'Mazda': ['3', '6', 'CX-3', 'CX-5', 'CX-9', 'MX-5', 'CX-30'],
-      'Hyundai': ['Solaris', 'Elantra', 'Sonata', 'Tucson', 'Santa Fe', 'Creta', 'Kona', 'Palisade'],
-      'Kia': ['Rio', 'Cerato', 'Optima', 'Sportage', 'Sorento', 'Seltos', 'Soul', 'Stinger'],
-      'Nissan': ['Qashqai', 'X-Trail', 'Juke', 'Murano', 'Pathfinder', 'Leaf', 'Note', 'Sentra'],
+      'Hyundai': [
+        'Solaris',
+        'Elantra',
+        'Sonata',
+        'Tucson',
+        'Santa Fe',
+        'Creta',
+        'Kona',
+        'Palisade'
+      ],
+      'Kia': [
+        'Rio',
+        'Cerato',
+        'Optima',
+        'Sportage',
+        'Sorento',
+        'Seltos',
+        'Soul',
+        'Stinger'
+      ],
+      'Nissan': [
+        'Qashqai',
+        'X-Trail',
+        'Juke',
+        'Murano',
+        'Pathfinder',
+        'Leaf',
+        'Note',
+        'Sentra'
+      ],
     };
 
     return models[brand] ?? ['Другая модель'];

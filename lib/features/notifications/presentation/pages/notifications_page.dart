@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../domain/entities/reminder_entity.dart';
@@ -49,16 +50,8 @@ class _NotificationsPageState extends State<NotificationsPage>
     return BlocListener<NotificationsBloc, NotificationsState>(
       listener: (context, state) {
         if (state is NotificationsError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: state.message, type: SnackBarType.error);
         }
       },
       child: Scaffold(
@@ -120,8 +113,6 @@ class _NotificationsPageState extends State<NotificationsPage>
     );
   }
 
-  // ─────────────── App Bar ───────────────
-
   Widget _buildAppBar() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
@@ -175,8 +166,6 @@ class _NotificationsPageState extends State<NotificationsPage>
     );
   }
 
-  // ─────────────── Tab Bar ───────────────
-
   Widget _buildTabBar() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
@@ -219,8 +208,6 @@ class _NotificationsPageState extends State<NotificationsPage>
     );
   }
 
-  // ─────────────── Active Tab ───────────────
-
   Widget _buildActiveTab(NotificationsLoaded state) {
     final overdue = state.overdueUnread;
     final upcoming = state.upcomingUnread;
@@ -259,8 +246,6 @@ class _NotificationsPageState extends State<NotificationsPage>
       ],
     );
   }
-
-  // ─────────────── Past Tab ───────────────
 
   Widget _buildPastTab(NotificationsLoaded state) {
     final read = state.readReminders;
@@ -309,8 +294,6 @@ class _NotificationsPageState extends State<NotificationsPage>
       ),
     );
   }
-
-  // ─────────────── Empty Active State ───────────────
 
   Widget _buildEmptyActiveState() {
     return Center(
@@ -371,8 +354,6 @@ class _NotificationsPageState extends State<NotificationsPage>
     );
   }
 
-  // ─────────────── Add Reminder Button ───────────────
-
   Widget _buildAddReminderButton() {
     return Padding(
       padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 16.h),
@@ -401,8 +382,6 @@ class _NotificationsPageState extends State<NotificationsPage>
     );
   }
 
-  // ─────────────── Dismissible Tile ───────────────
-
   Widget _buildDismissibleTile(
     ReminderEntity reminder, {
     required bool canMarkAsRead,
@@ -425,7 +404,6 @@ class _NotificationsPageState extends State<NotificationsPage>
                 );
           }
         },
-        // Свайп вправо → зелёный фон, галочка → прочитано
         background: Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.only(left: 24.w),
@@ -445,7 +423,6 @@ class _NotificationsPageState extends State<NotificationsPage>
             ],
           ),
         ),
-        // Свайп влево → красный фон, корзина → удалить
         secondaryBackground: Container(
           alignment: Alignment.centerRight,
           padding: EdgeInsets.only(right: 24.w),
@@ -471,8 +448,6 @@ class _NotificationsPageState extends State<NotificationsPage>
       ),
     );
   }
-
-  // ─────────────── Section Divider ───────────────
 
   Widget _buildSectionDivider(String label) {
     return Row(

@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../injection_container.dart';
@@ -33,7 +34,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.user.displayName ?? '');
+    _nameController =
+        TextEditingController(text: widget.user.displayName ?? '');
   }
 
   @override
@@ -43,7 +45,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   bool get _hasChanges {
-    final nameChanged = _nameController.text.trim() != (widget.user.displayName ?? '');
+    final nameChanged =
+        _nameController.text.trim() != (widget.user.displayName ?? '');
     return nameChanged || _selectedPhotoPath != null;
   }
 
@@ -53,28 +56,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       listener: (context, state) {
         if (state is ProfileUpdateSuccess) {
           context.read<AuthBloc>().add(const AuthCheckRequested());
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Профиль обновлён'),
-              backgroundColor: AppColors.primary,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: 'Профиль обновлён', type: SnackBarType.success);
           context.pop();
         } else if (state is ProfileError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-          );
+          AppSnackBar.show(context,
+              message: state.message, type: SnackBarType.error);
         }
       },
       child: Scaffold(
@@ -294,16 +281,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void _onSave() {
     final name = _nameController.text.trim();
     context.read<ProfileBloc>().add(ProfileUpdateRequested(
-      userId: widget.user.id,
-      displayName: name.isNotEmpty ? name : null,
-      photoPath: _selectedPhotoPath,
-    ));
+          userId: widget.user.id,
+          displayName: name.isNotEmpty ? name : null,
+          photoPath: _selectedPhotoPath,
+        ));
   }
 
   String _formatDate(DateTime date) {
     final months = [
-      'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-      'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря',
+      'января',
+      'февраля',
+      'марта',
+      'апреля',
+      'мая',
+      'июня',
+      'июля',
+      'августа',
+      'сентября',
+      'октября',
+      'ноября',
+      'декабря',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }

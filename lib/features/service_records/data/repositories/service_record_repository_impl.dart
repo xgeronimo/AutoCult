@@ -7,7 +7,6 @@ import '../../domain/repositories/service_record_repository.dart';
 import '../datasources/service_record_remote_datasource.dart';
 import '../models/service_record_model.dart';
 
-/// Реализация репозитория записей ТО
 class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
   final ServiceRecordRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
@@ -26,7 +25,8 @@ class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
   }
 
   @override
-  Future<Either<Failure, List<ServiceRecordEntity>>> getRecords(String carId) async {
+  Future<Either<Failure, List<ServiceRecordEntity>>> getRecords(
+      String carId) async {
     if (!await _checkConnection()) {
       return const Left(NetworkFailure());
     }
@@ -42,7 +42,8 @@ class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
   }
 
   @override
-  Future<Either<Failure, List<ServiceRecordEntity>>> getRecordsByUserId(String userId) async {
+  Future<Either<Failure, List<ServiceRecordEntity>>> getRecordsByUserId(
+      String userId) async {
     if (!await _checkConnection()) {
       return const Left(NetworkFailure());
     }
@@ -58,7 +59,8 @@ class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
   }
 
   @override
-  Future<Either<Failure, ServiceRecordEntity>> getRecordById(String recordId) async {
+  Future<Either<Failure, ServiceRecordEntity>> getRecordById(
+      String recordId) async {
     if (!await _checkConnection()) {
       return const Left(NetworkFailure());
     }
@@ -74,7 +76,8 @@ class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
   }
 
   @override
-  Future<Either<Failure, ServiceRecordEntity>> addRecord(ServiceRecordEntity record) async {
+  Future<Either<Failure, ServiceRecordEntity>> addRecord(
+      ServiceRecordEntity record) async {
     if (!await _checkConnection()) {
       return const Left(NetworkFailure());
     }
@@ -91,7 +94,8 @@ class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
   }
 
   @override
-  Future<Either<Failure, ServiceRecordEntity>> updateRecord(ServiceRecordEntity record) async {
+  Future<Either<Failure, ServiceRecordEntity>> updateRecord(
+      ServiceRecordEntity record) async {
     if (!await _checkConnection()) {
       return const Left(NetworkFailure());
     }
@@ -133,7 +137,8 @@ class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
     }
 
     try {
-      final records = await remoteDataSource.getRecordsByCategory(carId, category);
+      final records =
+          await remoteDataSource.getRecordsByCategory(carId, category);
       return Right(records);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -152,7 +157,8 @@ class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
     }
 
     try {
-      final records = await remoteDataSource.getRecentRecords(userId, limit: limit);
+      final records =
+          await remoteDataSource.getRecentRecords(userId, limit: limit);
       return Right(records);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -173,19 +179,18 @@ class ServiceRecordRepositoryImpl implements ServiceRecordRepository {
 
     try {
       final records = await remoteDataSource.getRecords(carId);
-      
-      // Фильтруем по датам
+
       final filteredRecords = records.where((record) {
         if (from != null && record.date.isBefore(from)) return false;
         if (to != null && record.date.isAfter(to)) return false;
         return true;
       });
 
-      // Группируем расходы по категориям
       final expenses = <ServiceCategory, double>{};
       for (final record in filteredRecords) {
         if (record.cost != null) {
-          expenses[record.category] = (expenses[record.category] ?? 0) + record.cost!;
+          expenses[record.category] =
+              (expenses[record.category] ?? 0) + record.cost!;
         }
       }
 

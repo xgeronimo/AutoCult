@@ -35,5 +35,6 @@ class DocumentEntity extends Equatable {
   String get displayName => label ?? type.label;
 
   @override
-  List<Object?> get props => [id, carId, userId, type, label, photoUrl, createdAt, updatedAt];
+  List<Object?> get props =>
+      [id, carId, userId, type, label, photoUrl, createdAt, updatedAt];
 }

@@ -38,7 +38,8 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   @override
-  Future<Either<Failure, List<ExpenseEntity>>> getExpensesByUserId(String userId) async {
+  Future<Either<Failure, List<ExpenseEntity>>> getExpensesByUserId(
+      String userId) async {
     try {
       if (!await _checkConnection()) return const Left(NetworkFailure());
       final expenses = await remoteDataSource.getExpensesByUserId(userId);
@@ -51,7 +52,8 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   @override
-  Future<Either<Failure, ExpenseEntity>> addExpense(ExpenseEntity expense) async {
+  Future<Either<Failure, ExpenseEntity>> addExpense(
+      ExpenseEntity expense) async {
     try {
       if (!await _checkConnection()) return const Left(NetworkFailure());
       final model = ExpenseModel.fromEntity(expense);

@@ -25,7 +25,8 @@ class PersonalDocumentRepositoryImpl implements PersonalDocumentRepository {
   }
 
   @override
-  Future<Either<Failure, List<PersonalDocumentEntity>>> getDocuments(String userId) async {
+  Future<Either<Failure, List<PersonalDocumentEntity>>> getDocuments(
+      String userId) async {
     try {
       if (!await _checkConnection()) return const Left(NetworkFailure());
       final docs = await remoteDataSource.getDocuments(userId);
@@ -38,7 +39,8 @@ class PersonalDocumentRepositoryImpl implements PersonalDocumentRepository {
   }
 
   @override
-  Future<Either<Failure, PersonalDocumentEntity>> addDocument(PersonalDocumentEntity document) async {
+  Future<Either<Failure, PersonalDocumentEntity>> addDocument(
+      PersonalDocumentEntity document) async {
     try {
       if (!await _checkConnection()) return const Left(NetworkFailure());
       final model = PersonalDocumentModel.fromEntity(document);

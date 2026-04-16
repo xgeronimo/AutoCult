@@ -162,7 +162,8 @@ class _GaragePageState extends State<GaragePage>
             padding: EdgeInsets.only(top: 8.h, bottom: 16.h),
             child: Row(
               children: [
-                Expanded(child: Divider(color: AppColors.divider, thickness: 1)),
+                Expanded(
+                    child: Divider(color: AppColors.divider, thickness: 1)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                   child: Text(
@@ -174,7 +175,8 @@ class _GaragePageState extends State<GaragePage>
                     ),
                   ),
                 ),
-                Expanded(child: Divider(color: AppColors.divider, thickness: 1)),
+                Expanded(
+                    child: Divider(color: AppColors.divider, thickness: 1)),
               ],
             ),
           ),
