@@ -661,8 +661,9 @@ class _PdfPreviewPage extends StatelessWidget {
         canChangePageFormat: false,
         canChangeOrientation: false,
         canDebug: false,
+        allowPrinting: false,
+        allowSharing: false,
         pdfFileName: filename,
-        actions: const [],
       ),
     );
   }

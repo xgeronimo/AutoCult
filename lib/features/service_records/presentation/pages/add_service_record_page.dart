@@ -14,6 +14,8 @@ import '../../../../injection_container.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/widgets/auth_text_field.dart';
 import '../../domain/entities/service_record_entity.dart';
+import '../../domain/usecases/get_records_usecase.dart';
+import '../../domain/validators/mileage_consistency_validator.dart';
 import '../bloc/service_records_bloc.dart';
 
 class AddServiceRecordPage extends StatefulWidget {
@@ -44,10 +46,25 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
   String? _mileageError;
   bool _isLoading = false;
 
+  List<ServiceRecordEntity> _existingRecords = const [];
+
   @override
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
+    _loadExistingRecords();
+  }
+
+  Future<void> _loadExistingRecords() async {
+    final result = await sl<GetRecordsUseCase>()(widget.carId);
+    result.fold(
+      (_) {},
+      (records) {
+        if (mounted) {
+          setState(() => _existingRecords = records);
+        }
+      },
+    );
   }
 
   @override
@@ -474,7 +491,10 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
     );
 
     if (picked != null) {
-      setState(() => _selectedDate = picked);
+      setState(() {
+        _selectedDate = picked;
+        _mileageError = null;
+      });
     }
   }
 
@@ -498,13 +518,26 @@ class _AddServiceRecordPageState extends State<AddServiceRecordPage> {
     }
 
     final mileageText = _mileageController.text.trim();
+    int? mileage;
     if (mileageText.isEmpty) {
       _mileageError = 'Введите пробег';
       hasError = true;
     } else {
-      final mileage = int.tryParse(mileageText);
+      mileage = int.tryParse(mileageText);
       if (mileage == null || mileage < 0) {
         _mileageError = 'Введите корректный пробег';
+        hasError = true;
+      }
+    }
+
+    if (!hasError && mileage != null) {
+      final consistencyError = MileageConsistencyValidator.validate(
+        date: _selectedDate,
+        mileage: mileage,
+        existingRecords: _existingRecords,
+      );
+      if (consistencyError != null) {
+        _mileageError = consistencyError;
         hasError = true;
       }
     }

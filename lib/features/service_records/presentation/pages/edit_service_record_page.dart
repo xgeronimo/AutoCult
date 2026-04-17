@@ -13,6 +13,8 @@ import '../../../../core/widgets/photo_viewer_page.dart';
 import '../../../../core/widgets/success_dialog.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/service_record_entity.dart';
+import '../../domain/usecases/get_records_usecase.dart';
+import '../../domain/validators/mileage_consistency_validator.dart';
 import '../bloc/service_records_bloc.dart';
 
 class EditServiceRecordPage extends StatefulWidget {
@@ -46,6 +48,8 @@ class _EditServiceRecordPageState extends State<EditServiceRecordPage> {
   String? _mileageError;
   bool _isLoading = false;
 
+  List<ServiceRecordEntity> _existingRecords = const [];
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +62,19 @@ class _EditServiceRecordPageState extends State<EditServiceRecordPage> {
     _selectedDate = r.date;
     _selectedCategory = r.category;
     _existingPhotoUrls = List.from(r.photoUrls);
+    _loadExistingRecords();
+  }
+
+  Future<void> _loadExistingRecords() async {
+    final result = await sl<GetRecordsUseCase>()(widget.carId);
+    result.fold(
+      (_) {},
+      (records) {
+        if (mounted) {
+          setState(() => _existingRecords = records);
+        }
+      },
+    );
   }
 
   @override
@@ -621,7 +638,10 @@ class _EditServiceRecordPageState extends State<EditServiceRecordPage> {
     );
 
     if (picked != null) {
-      setState(() => _selectedDate = picked);
+      setState(() {
+        _selectedDate = picked;
+        _mileageError = null;
+      });
     }
   }
 
@@ -645,13 +665,27 @@ class _EditServiceRecordPageState extends State<EditServiceRecordPage> {
     }
 
     final mileageText = _mileageController.text.trim();
+    int? mileage;
     if (mileageText.isEmpty) {
       _mileageError = 'Введите пробег';
       hasError = true;
     } else {
-      final mileage = int.tryParse(mileageText);
+      mileage = int.tryParse(mileageText);
       if (mileage == null || mileage < 0) {
         _mileageError = 'Введите корректный пробег';
+        hasError = true;
+      }
+    }
+
+    if (!hasError && mileage != null) {
+      final consistencyError = MileageConsistencyValidator.validate(
+        date: _selectedDate,
+        mileage: mileage,
+        existingRecords: _existingRecords,
+        excludeRecordId: widget.record.id,
+      );
+      if (consistencyError != null) {
+        _mileageError = consistencyError;
         hasError = true;
       }
     }

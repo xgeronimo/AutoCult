@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,12 +68,36 @@ class AppRoutes {
   static const String statistics = '/statistics';
 }
 
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (_) => notifyListeners(),
+        );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
+
 class AppRouter {
   AppRouter._();
 
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-  static GoRouter get router => _router;
+  static GoRouter? _routerInstance;
+
+  static GoRouter buildRouter({Listenable? refreshListenable}) {
+    _routerInstance ??= _createRouter(refreshListenable);
+    return _routerInstance!;
+  }
+
+  static GoRouter get router => _routerInstance ?? _createRouter(null);
 
   static CarEntity? _getCarFromState(BuildContext context, String carId) {
     final garageState = context.read<GarageBloc>().state;
@@ -99,10 +125,11 @@ class AppRouter {
     );
   }
 
-  static final GoRouter _router = GoRouter(
+  static GoRouter _createRouter(Listenable? refreshListenable) => GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.signIn,
     debugLogDiagnostics: false,
+    refreshListenable: refreshListenable,
     redirect: (context, state) {
       final authBloc = context.read<AuthBloc>();
       final authState = authBloc.state;

@@ -849,9 +849,16 @@ class _CarDetailsView extends StatelessWidget {
 
   Widget _buildAddRecordCard(BuildContext context, CarEntity car) {
     return GestureDetector(
-      onTap: () => context.push(
-        AppRoutes.addServiceRecord.replaceAll(':carId', car.id),
-      ),
+      onTap: () async {
+        await context.push(
+          AppRoutes.addServiceRecord.replaceAll(':carId', car.id),
+        );
+        if (context.mounted) {
+          context
+              .read<ServiceRecordsBloc>()
+              .add(ServiceRecordsLoadRequested(car.id));
+        }
+      },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
